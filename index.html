@@ -217,7 +217,10 @@
 
   nav.bottom{position:fixed;left:0;right:0;bottom:0;z-index:45;height:calc(var(--navh) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);display:flex;background:rgba(13,21,38,.92);backdrop-filter:blur(12px);border-top:1px solid var(--line)}
   nav.bottom button{flex:1;background:none;border:none;color:var(--muted);font-family:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10.5px;font-weight:600;padding:0}
-  nav.bottom button .ic{font-size:20px;line-height:1}nav.bottom button[aria-selected="true"]{color:var(--gold)}
+  nav.bottom button .ic{font-size:20px;line-height:1}
+  nav.bottom button .ic.galo2{font-size:15px;letter-spacing:-3px;white-space:nowrap}
+  .galo2 .flip{display:inline-block;transform:scaleX(-1)}
+  .galolbl{font-size:8.5px;line-height:1.05;text-align:center}nav.bottom button[aria-selected="true"]{color:var(--gold)}
   .view{display:none;animation:fade .22s ease}.view.on{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
   .banner{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;padding:11px 13px;font-size:12.5px;color:var(--muted);margin-bottom:14px}.banner b{color:var(--txt)}
@@ -366,7 +369,7 @@
   <nav class="bottom" id="nav" role="tablist">
     <button role="tab" data-view="palpites" aria-selected="true"><span class="ic">⚽</span>Palpites</button>
     <button role="tab" data-view="ranking" aria-selected="false"><span class="ic">🏆</span>Ranking</button>
-    <button role="tab" data-view="galo" aria-selected="false"><span class="ic">🐓</span>Galo</button>
+    <button role="tab" data-view="galo" aria-selected="false"><span class="ic galo2"><span class="flip">🐓</span>🐓</span><span class="galolbl">Galo de Rinha</span></button>
     <button role="tab" data-view="resultados" aria-selected="false"><span class="ic">🛠️</span>Resultados</button>
     <button role="tab" data-view="regras" aria-selected="false"><span class="ic">📋</span>Regras</button>
   </nav>
@@ -619,9 +622,9 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   }
   function renderRanking(){
     var root=$('#ranking');
-    if(!players.length){root.innerHTML='<div class="rank-head">🏆 <b>Winner takes it all</b> · R$'+ENTRY+'/pessoa</div><div class="empty">Ninguém entrou ainda. Seja o primeiro!</div>';return;}
+    if(!players.length){root.innerHTML='<div class="rank-head">🏆 <b>O vencedor papa tudo!</b> · R$'+ENTRY+'/pessoa</div><div class="empty">Ninguém entrou ainda. Seja o primeiro!</div>';return;}
     var rk=ranked(),anyResult=cfg.matches.some(function(m){return m.result;}),html='';
-    html+='<div class="rank-head">🏆 <b>Winner takes it all</b> · R$'+ENTRY+'/pessoa · quer ficar estribado com R$'+(players.length*ENTRY)+'?</div>';html+=notifCtaHtml();
+    html+='<div class="rank-head">🏆 <b>O vencedor papa tudo!</b> · R$'+ENTRY+'/pessoa · quer ficar estribado com R$'+(players.length*ENTRY)+'?</div>';html+=notifCtaHtml();
     var top=rk.slice(0,3);
     if(top.length){var order=[1,0,2];html+='<div class="podium">';order.forEach(function(idx){var r=top[idx];if(!r){html+='<div></div>';return;}var nm=esc(r.p.name.split(' ')[0]);html+='<div class="pod'+(idx===0?' first':'')+'">'+charFor(idx)+'<div class="pname">'+(idx===0?'<span class="fire"><span class="flame">🔥</span> '+nm+' <span class="flame">🔥</span></span>':nm)+'</div><div class="ppts">'+r.st.pts+'</div></div>';});html+='</div>';}
     html+='<table class="rank"><thead><tr><th>#</th><th>Participante</th><th>Pts</th><th title="Placares exatos">🎯</th><th title="Resultados certos">✅</th></tr></thead><tbody>';
