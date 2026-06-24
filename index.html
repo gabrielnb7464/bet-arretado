@@ -183,6 +183,10 @@
   .admin-match .rin{width:42px;height:38px;text-align:center;font-family:'Oswald';font-weight:700;font-size:17px;background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--txt)}
   .admin-match .rin:focus{outline:none;border-color:var(--gold)}
   .iconbtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:7px 9px;cursor:pointer;font-size:13px}.iconbtn.del:hover{color:var(--red);border-color:rgba(248,113,113,.4)}.iconbtn.delp:hover{color:var(--red);border-color:rgba(248,113,113,.4)}
+  .linkbtn{display:block;width:100%;margin:10px 0 0;background:none;border:none;color:var(--gold);font-size:12.5px;cursor:pointer;text-decoration:underline;font-family:inherit}
+  .confirmbtn{background:var(--gold);color:#1a1205;border:none;border-radius:8px;padding:7px 13px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+  .confirmbtn.done{background:var(--panel-2);color:#4ade80;border:1px solid rgba(74,222,128,.4)}
+  .confirmbtn:disabled{opacity:.45;cursor:default}
   .prow{display:flex;align-items:center;gap:9px;background:var(--panel-2);border:1px solid var(--line);border-radius:11px;padding:10px 11px;margin-bottom:8px;font-size:13px}
   .prow .pn{font-weight:600}.prow .px{font-family:'Oswald';color:var(--muted);font-size:12px;word-break:break-all}
   .prow .pay{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11.5px;white-space:nowrap}.prow .pay input{width:17px;height:17px;accent-color:var(--green)}
@@ -270,10 +274,23 @@
       <div class="pv" id="pixVal">979.432.823-53</div>
       <button class="pixcopy" id="pixCopy">📋 Copiar chave Pix (CPF)</button>
     </div>
-    <label class="fld"><span class="req">Seu nome</span><input class="t" id="regName" placeholder="Ex.: Gabriel" autocomplete="name"></label>
-    <label class="fld"><span class="req">Sua chave Pix (para receber, se vencer)</span><input class="t" id="regPix" placeholder="CPF, e-mail, telefone ou chave aleatória"></label>
-    <button class="btn" id="regBtn">Entrar no bolão</button>
-    <div id="rejoinWrap" style="margin-top:16px;display:none"><label class="fld" style="margin:0"><span>Já participa? Recupere seu nome neste aparelho</span><select class="t" id="rejoinSel"></select></label></div>
+    <div id="loginWrap" style="display:none">
+      <h3 style="margin:14px 0 6px;font-size:14px">Já está no bolão? Entre na sua conta</h3>
+      <p class="lead" style="margin:0 0 10px;font-size:12.5px">Seu <b>login é o seu nome</b> e a <b>senha é o seu CPF</b> (só números).</p>
+      <label class="fld"><span class="req">Selecione seu nome (login)</span><select class="t" id="loginSel"></select></label>
+      <label class="fld" id="loginCpfFld" style="display:none"><span class="req" id="loginCpfLbl">Senha (seu CPF, só números)</span><input class="t" id="loginCpf" type="password" inputmode="numeric" autocomplete="off" maxlength="11" placeholder="00000000000"></label>
+      <button class="btn" id="loginBtn" style="display:none">Entrar</button>
+      <button class="linkbtn" id="toRegister">Não tem conta ainda? Cadastre-se</button>
+    </div>
+    <div id="regWrap">
+      <h3 style="margin:14px 0 6px;font-size:14px">Primeira vez? Faça seu cadastro</h3>
+      <p class="lead" style="margin:0 0 10px;font-size:12.5px">Seu <b>login será o seu nome</b> e sua <b>senha será o seu CPF</b> (só números). Guarde bem!</p>
+      <label class="fld"><span class="req">Seu nome (será seu login)</span><input class="t" id="regName" placeholder="Ex.: Gabriel" autocomplete="name"></label>
+      <label class="fld"><span class="req">Seu CPF (será sua senha, só números)</span><input class="t" id="regCpf" type="password" inputmode="numeric" autocomplete="off" maxlength="11" placeholder="00000000000"></label>
+      <label class="fld"><span class="req">Sua chave Pix (para receber, se vencer)</span><input class="t" id="regPix" placeholder="CPF, e-mail, telefone ou chave aleatória"></label>
+      <button class="btn" id="regBtn">Criar conta e entrar</button>
+      <button class="linkbtn" id="toLogin" style="display:none">Já tenho conta — entrar</button>
+    </div>
   </section>
 
   <section id="palpites" class="view on"></section>
@@ -302,11 +319,19 @@
     </div>
     <div class="card">
       <h2>Trava dos palpites</h2>
-      <p class="lead" style="margin:0">Dá para dar ou mudar o palpite <b>até 60 min antes</b> do início de cada jogo. Depois disso, trava automaticamente.</p>
+      <p class="lead" style="margin:0">Dá para dar ou mudar o palpite <b>até o início de cada jogo</b>. No apito inicial, trava automaticamente.</p>
     </div>
     <div class="card">
       <h2>Critérios de desempate</h2>
       <ol class="tb"><li><b>Mais placares exatos.</b></li><li><b>Mais resultados certos.</b></li><li><b>Mais acertos de saldo.</b></li><li><b>Menor diferença total de gols.</b></li><li><b>Sorteio.</b></li></ol>
+    </div>
+    <div class="card">
+      <h2>⚽ Mata-mata: tempo normal</h2>
+      <p class="lead" style="margin:0">Nos jogos de mata-mata, vale o <b>placar do tempo regulamentar</b>. Decisão por <b>pênaltis não conta</b> para o placar.</p>
+    </div>
+    <div class="card">
+      <h2>🔐 Login e senha</h2>
+      <p class="lead" style="margin:0">Seu <b>login é o seu nome</b> e sua <b>senha é o seu CPF</b> (só números). Assim ninguém entra na conta dos outros. O CPF fica guardado <b>embaralhado</b> — nem o app enxerga seu número.</p>
     </div>
   </section>
 
@@ -428,7 +453,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   var toastT;function toast(m,ok){var t=$('#toast');t.textContent=m;t.className='toast show'+(ok?' ok':'');clearTimeout(toastT);toastT=setTimeout(function(){t.className='toast';},1900);}
   function brt(iso){try{return new Date(iso).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',weekday:'short',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});}catch(e){return iso;}}
   function dayKey(iso){try{return new Date(iso).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',weekday:'long',day:'2-digit',month:'2-digit'});}catch(e){return '';}}
-  function lockInfo(m){if(m.result)return {state:'final'};var ko=new Date(m.kickoff).getTime(),lock=ko-3600000,now=Date.now();if(now>=lock)return {state:'fechado'};return {state:'aberto',rem:lock-now};}
+  function lockInfo(m){if(m.result)return {state:'final'};var ko=new Date(m.kickoff).getTime(),lock=ko,now=Date.now();if(now>=lock)return {state:'fechado'};return {state:'aberto',rem:lock-now};}
   function fmtRem(ms){var s=Math.floor(ms/1000),d=Math.floor(s/86400);s-=d*86400;var h=Math.floor(s/3600);s-=h*3600;var mi=Math.floor(s/60);if(d>0)return d+'d '+h+'h';if(h>0)return h+'h '+mi+'min';return Math.max(1,mi)+'min';}
 
   function scoreBase(p,res){if(!p||!res||p.h==null||p.a==null)return {pts:0,exact:false,outcome:false,saldo:false};var ph=+p.h,pa=+p.a,ah=+res.h,aa=+res.a;if(ph===ah&&pa===aa)return {pts:25,exact:true,outcome:true,saldo:true};var ps=Math.sign(ph-pa),as=Math.sign(ah-aa);if(ps===as){if(as!==0&&(ph-pa)===(ah-aa))return {pts:18,exact:false,outcome:true,saldo:true};return {pts:12,exact:false,outcome:true,saldo:as===0};}if(ph===ah||pa===aa)return {pts:5,exact:false,outcome:false,saldo:false};return {pts:0,exact:false,outcome:false,saldo:false};}
@@ -466,11 +491,16 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   function fallbackCopy(t){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Chave Pix copiada! '+POOL_PIX_DISPLAY,true);}catch(e){toast('Copie a chave: '+POOL_PIX_DISPLAY);}}
 
   /* ---------- registro ---------- */
-  function showRegister(){$('#register').style.display='block';$$('.view').forEach(function(v){v.classList.remove('on');});$('#meChip').style.display='none';$('#nav').style.visibility='hidden';if(players.length){$('#rejoinWrap').style.display='block';$('#rejoinSel').innerHTML='<option value="">— novo cadastro —</option>'+players.map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.name)+'</option>';}).join('');}else $('#rejoinWrap').style.display='none';}
+  function showRegister(){$('#register').style.display='block';$$('.view').forEach(function(v){v.classList.remove('on');});$('#meChip').style.display='none';$('#nav').style.visibility='hidden';var hasP=players.length>0;$('#loginWrap').style.display=hasP?'block':'none';$('#regWrap').style.display=hasP?'none':'block';$('#toLogin').style.display=hasP?'inline':'none';if(hasP){$('#loginSel').innerHTML='<option value="">— selecione seu nome —</option>'+players.slice().sort(function(a,b){return (a.name||'').localeCompare(b.name||'','pt');}).map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.name)+'</option>';}).join('');$('#loginSel').value='';$('#loginCpf').value='';$('#loginCpfFld').style.display='none';$('#loginBtn').style.display='none';}}
   $('#pixCopy').addEventListener('click',function(){copyText(POOL_PIX_COPY);});
   $('#predModal').addEventListener('click',function(e){if(e.target.id==='predModal')closePreds();});
-  $('#rejoinSel').addEventListener('change',async function(e){var id=e.target.value;if(!id)return;var p=players.filter(function(x){return x.id===id;})[0];if(!p)return;me=p;await setObj(ME_KEY,{id:p.id},false);$('#register').style.display='none';afterLogin();});
-  $('#regBtn').addEventListener('click',async function(){var name=$('#regName').value.trim(),pix=$('#regPix').value.trim();if(!name){toast('Digite seu nome');return;}if(!pix){toast('Informe sua chave Pix');return;}if(players.some(function(q){return (q.name||'').trim().toLowerCase()===name.toLowerCase();})){toast('Já existe um participante com esse nome');return;}me={id:uid(),name:name,pix:pix,paid:false,predictions:{}};players.push(me);await savePlayer(me);await setObj(ME_KEY,{id:me.id},false);$('#register').style.display='none';toast('Bem-vindo, '+name.split(' ')[0]+'!',true);afterLogin();});
+  function onlyDigits(s){return (s||'').replace(/\D/g,'');}
+  async function hashCPF(cpf){var data='bet-arretado-v1:'+cpf;try{if(window.crypto&&crypto.subtle&&crypto.subtle.digest){var buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(data));return Array.prototype.map.call(new Uint8Array(buf),function(b){return ('0'+b.toString(16)).slice(-2);}).join('');}}catch(e){}var h=5381;for(var i=0;i<data.length;i++){h=((h*33)^data.charCodeAt(i))>>>0;}return 'f'+h.toString(16);}
+  $('#toRegister').addEventListener('click',function(){$('#loginWrap').style.display='none';$('#regWrap').style.display='block';$('#toLogin').style.display='inline';});
+  $('#toLogin').addEventListener('click',function(){$('#regWrap').style.display='none';$('#loginWrap').style.display='block';});
+  $('#loginSel').addEventListener('change',function(e){var id=e.target.value;if(!id){$('#loginCpfFld').style.display='none';$('#loginBtn').style.display='none';return;}var p=players.filter(function(x){return x.id===id;})[0];if(!p)return;$('#loginCpfFld').style.display='block';$('#loginBtn').style.display='block';$('#loginCpf').value='';var legacy=!p.cpfHash;$('#loginCpfLbl').textContent=legacy?'Defina seu CPF (será sua senha, só números)':'Senha (seu CPF, só números)';$('#loginBtn').textContent=legacy?'Definir CPF e entrar':'Entrar';try{$('#loginCpf').focus();}catch(e){}});
+  $('#loginBtn').addEventListener('click',async function(){var id=$('#loginSel').value;if(!id){toast('Selecione seu nome');return;}var p=players.filter(function(x){return x.id===id;})[0];if(!p)return;var cpf=onlyDigits($('#loginCpf').value);if(cpf.length!==11){toast('Digite os 11 números do CPF');return;}var h=await hashCPF(cpf);if(p.cpfHash){if(p.cpfHash!==h){toast('CPF incorreto pra esse nome');return;}}else{p.cpfHash=h;await savePlayer(p);}me=p;await setObj(ME_KEY,{id:p.id},false);$('#register').style.display='none';toast('Bem-vindo de volta, '+p.name.split(' ')[0]+'!',true);afterLogin();});
+  $('#regBtn').addEventListener('click',async function(){var name=$('#regName').value.trim(),pix=$('#regPix').value.trim(),cpf=onlyDigits($('#regCpf').value);if(!name){toast('Digite seu nome');return;}if(cpf.length!==11){toast('Digite os 11 números do seu CPF');return;}if(!pix){toast('Informe sua chave Pix');return;}if(players.some(function(q){return (q.name||'').trim().toLowerCase()===name.toLowerCase();})){toast('Já existe um participante com esse nome');return;}var h=await hashCPF(cpf);me={id:uid(),name:name,pix:pix,cpfHash:h,paid:false,predictions:{}};players.push(me);await savePlayer(me);await setObj(ME_KEY,{id:me.id},false);$('#register').style.display='none';toast('Bem-vindo, '+name.split(' ')[0]+'!',true);afterLogin();});
   $('#logout').addEventListener('click',async function(){await sSet(ME_KEY,'',false);me=null;showRegister();});
   function afterLogin(){var chip=$('#meChip');chip.style.display='flex';$('#meName').textContent=me.name.split(' ')[0];$('#nav').style.visibility='visible';switchView('palpites');}
 
@@ -487,21 +517,23 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
     var lastDay='';
     list.forEach(function(m){
       var dk=dayKey(m.kickoff);if(filter!=='brasil'&&dk!==lastDay){lastDay=dk;html+='<div class="daylabel">'+esc(dk)+'</div>';}
-      var li=lockInfo(m),pr=(me.predictions&&me.predictions[m.id])||{h:'',a:''},locked=li.state!=='aberto',sc=m.result?scoreFor(pr,m):null,counts=new Date(m.kickoff).getTime()>=SCORE_FROM;
+      var li=lockInfo(m),pr=(me.predictions&&me.predictions[m.id])||{h:'',a:''},locked=li.state!=='aberto',hasPred=(pr.h!==''&&pr.h!=null&&pr.a!==''&&pr.a!=null),sc=m.result?scoreFor(pr,m):null,counts=new Date(m.kickoff).getTime()>=SCORE_FROM;
       var st=li.state==='final'?'Encerrado':li.state==='fechado'?'Fechado':'Aberto';
       html+='<div class="match'+(m.weight===2?' br':'')+'" data-mid="'+esc(m.id)+'"><div class="row1"><span class="chip">'+esc(m.group)+(m.weight===2?'</span><span class="br-badge">VALE 2×</span>':'</span>')+'<span class="status '+li.state+'">'+st+'</span></div>'+
         '<div class="scoreboard"><div class="team"><div class="tline">'+flagImg(m.a.abbr)+'<span class="abbr">'+esc(m.a.abbr)+'</span></div><span class="full">'+esc(m.a.name)+'</span></div>'+
         '<div class="pred"><input type="number" min="0" max="30" inputmode="numeric" class="ph" value="'+esc(pr.h)+'" '+(locked?'disabled':'')+' aria-label="Gols '+esc(m.a.name)+'"><span class="x">×</span><input type="number" min="0" max="30" inputmode="numeric" class="pa" value="'+esc(pr.a)+'" '+(locked?'disabled':'')+' aria-label="Gols '+esc(m.b.name)+'"></div>'+
         '<div class="team"><div class="tline">'+flagImg(m.b.abbr)+'<span class="abbr">'+esc(m.b.abbr)+'</span></div><span class="full">'+esc(m.b.name)+'</span></div></div>'+
         '<div class="meta"><span class="when">'+esc(brt(m.kickoff))+(li.state==='aberto'?'<span class="lock'+(li.rem<10800000?' soon':'')+'">Fecha em '+fmtRem(li.rem)+'</span>':(li.state==='fechado'?'<span class="lock">Palpites encerrados</span>':''))+'</span>'+
-        (m.result?'<span class="result-line"><span class="official">Oficial '+m.result.h+'×'+m.result.a+'</span>'+(counts?'<span class="pts '+(sc.exact?'exato':sc.pts>0?'win':'zero')+'">'+(sc.pts>0?'+':'')+sc.pts+'</span>':'<span class="pts zero">histórico</span>')+'</span>':'<span class="saved" data-save="'+esc(m.id)+'">salvo ✓</span>')+'</div>'+(Date.now()>=new Date(m.kickoff).getTime()?'<button class="predbtn" data-preds="'+esc(m.id)+'">👀 Ver palpites de todos</button>':'')+'</div>';
+        (m.result?'<span class="result-line"><span class="official">Oficial '+m.result.h+'×'+m.result.a+'</span>'+(counts?'<span class="pts '+(sc.exact?'exato':sc.pts>0?'win':'zero')+'">'+(sc.pts>0?'+':'')+sc.pts+'</span>':'<span class="pts zero">histórico</span>')+'</span>':'<button class="confirmbtn'+(hasPred?' done':'')+'" data-confirm="'+esc(m.id)+'"'+(locked?' disabled':'')+'>'+(hasPred?'Confirmado ✓':'Confirmar palpite')+'</button><span class="saved" data-save="'+esc(m.id)+'">salvo ✓</span>')+'</div>'+(Date.now()>=new Date(m.kickoff).getTime()?'<button class="predbtn" data-preds="'+esc(m.id)+'">👀 Ver palpites de todos</button>':'')+'</div>';
     });
     root.innerHTML=html;bindFilters();
     var pp=$('#potPix');if(pp)pp.addEventListener('click',function(){copyText(POOL_PIX_COPY);});
     $$('#palpites .predbtn').forEach(function(b){b.addEventListener('click',function(){openPreds(b.dataset.preds);});});
-    $$('#palpites .match').forEach(function(card){var mid=card.dataset.mid,m=cfg.matches.filter(function(x){return x.id===mid;})[0],ph=$('.ph',card),pa=$('.pa',card);
-      function save(){if(ph.disabled)return;var hv=ph.value===''?null:Math.max(0,Math.min(30,parseInt(ph.value,10))),av=pa.value===''?null:Math.max(0,Math.min(30,parseInt(pa.value,10)));me.predictions=me.predictions||{};if(hv==null&&av==null)delete me.predictions[mid];else me.predictions[mid]={h:hv,a:av};savePlayer(me);var s=$('.saved[data-save="'+mid+'"]',card);if(s){s.classList.add('show');setTimeout(function(){s.classList.remove('show');},900);}if(m&&brazilWin(m,hv,av)){try{var au=new Audio(BRAZIL_WIN_SOUND);au.play().catch(function(){});}catch(e){}}}
-      ph&&ph.addEventListener('change',save);pa&&pa.addEventListener('change',save);});
+    $$('#palpites .match').forEach(function(card){var mid=card.dataset.mid,m=cfg.matches.filter(function(x){return x.id===mid;})[0],ph=$('.ph',card),pa=$('.pa',card),cb=$('.confirmbtn[data-confirm="'+mid+'"]',card);
+      function save(){if(ph.disabled)return;var hv=ph.value===''?null:Math.max(0,Math.min(30,parseInt(ph.value,10))),av=pa.value===''?null:Math.max(0,Math.min(30,parseInt(pa.value,10)));me.predictions=me.predictions||{};if(hv==null&&av==null)delete me.predictions[mid];else me.predictions[mid]={h:hv,a:av};savePlayer(me);if(cb){cb.classList.add('done');cb.textContent='Confirmado ✓';}var s=$('.saved[data-save="'+mid+'"]',card);if(s){s.classList.add('show');setTimeout(function(){s.classList.remove('show');},1100);}if(m&&brazilWin(m,hv,av)){try{var au=new Audio(BRAZIL_WIN_SOUND);au.play().catch(function(){});}catch(e){}}}
+      function dirty(){if(cb&&!ph.disabled){cb.classList.remove('done');cb.textContent='Confirmar palpite';}}
+      ph&&ph.addEventListener('input',dirty);pa&&pa.addEventListener('input',dirty);
+      if(cb)cb.addEventListener('click',save);});
   }
   function bindFilters(){$$('#filters .fchip').forEach(function(b){b.addEventListener('click',function(){filter=b.dataset.f;renderPalpites();});});}
 
@@ -555,7 +587,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
     if(!players.length)html+='<div class="empty" style="padding:10px 0">Ninguém inscrito.</div>';
     players.slice().sort(function(a,b){return a.name.localeCompare(b.name,'pt');}).forEach(function(p){html+='<div class="prow" data-pid="'+esc(p.id)+'"><div><div class="pn">'+esc(p.name)+'</div><div class="px">'+esc(p.pix||'—')+'</div></div><label class="pay"><input type="checkbox" class="paidchk" '+(p.paid?'checked':'')+'> pago</label>'+(me&&p.id===me.id?'':'<button class="iconbtn delp" title="Remover participante">🗑️</button>')+'</div>';});
     html+='</div>';
-    html+='<div class="card"><h2>Adicionar jogo (mata-mata)</h2><div class="grid2"><label class="fld"><span>Mandante</span><input class="t" id="naName" placeholder="Brasil"></label><label class="fld"><span>Visitante</span><input class="t" id="nbName" placeholder="Argentina"></label></div><div class="grid3"><label class="fld"><span>Sigla M.</span><input class="t" id="naAbbr" maxlength="4" placeholder="BRA"></label><label class="fld"><span>Band. M.</span><input class="t" id="naFlag" maxlength="4" placeholder="🇧🇷"></label><label class="fld"><span>Fase</span><input class="t" id="nGroup" placeholder="Oitavas"></label></div><div class="grid3"><label class="fld"><span>Sigla V.</span><input class="t" id="nbAbbr" maxlength="4" placeholder="ARG"></label><label class="fld"><span>Band. V.</span><input class="t" id="nbFlag" maxlength="4" placeholder="🇦🇷"></label><label class="fld"><span>Data e hora (Brasília)</span><input class="t" id="nDate" type="datetime-local"></label></div><div class="chkrow"><input type="checkbox" id="nWeight"><label for="nWeight">Jogo do Brasil — vale em dobro (2×)</label></div><button class="btn" id="addMatch">Adicionar jogo</button></div>';
+    html+='<div class="card"><h2>Adicionar jogo (mata-mata)</h2><p class="lead" style="margin:0 0 10px">Lance sempre o <b>placar do tempo normal</b> (sem pênaltis).</p><div class="grid2"><label class="fld"><span>Mandante</span><input class="t" id="naName" placeholder="Brasil"></label><label class="fld"><span>Visitante</span><input class="t" id="nbName" placeholder="Argentina"></label></div><div class="grid3"><label class="fld"><span>Sigla M.</span><input class="t" id="naAbbr" maxlength="4" placeholder="BRA"></label><label class="fld"><span>Band. M.</span><input class="t" id="naFlag" maxlength="4" placeholder="🇧🇷"></label><label class="fld"><span>Fase</span><input class="t" id="nGroup" placeholder="Oitavas"></label></div><div class="grid3"><label class="fld"><span>Sigla V.</span><input class="t" id="nbAbbr" maxlength="4" placeholder="ARG"></label><label class="fld"><span>Band. V.</span><input class="t" id="nbFlag" maxlength="4" placeholder="🇦🇷"></label><label class="fld"><span>Data e hora (Brasília)</span><input class="t" id="nDate" type="datetime-local"></label></div><div class="chkrow"><input type="checkbox" id="nWeight"><label for="nWeight">Jogo do Brasil — vale em dobro (2×)</label></div><button class="btn" id="addMatch">Adicionar jogo</button></div>';
     html+='<div class="card"><h2>Jogos & resultados</h2><div class="filters" id="afilters"><button class="fchip" data-af="upcoming" aria-pressed="'+(adminFilter==='upcoming')+'">A partir de hoje</button><button class="fchip" data-af="all" aria-pressed="'+(adminFilter==='all')+'">Todos</button><button class="fchip" data-af="done" aria-pressed="'+(adminFilter==='done')+'">Com resultado</button></div>';
     var now=Date.now();
     var rows=cfg.matches.filter(function(m){if(adminFilter==='done')return !!m.result;if(adminFilter==='upcoming')return new Date(m.kickoff).getTime()>now-86400000||!m.result;return true;});
