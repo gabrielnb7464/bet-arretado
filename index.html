@@ -215,6 +215,15 @@
   .react{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-size:14px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:4px;transition:.15s}
   .react.mine{border-color:var(--gold);background:rgba(246,192,38,.14)}
   .react .rc{font-size:11px;color:var(--muted);font-weight:700}
+  .notif-cta{display:block;width:100%;margin:2px 0 12px;background:var(--panel-2);border:1px solid var(--gold);color:var(--gold);border-radius:11px;padding:11px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+  .rankpop{position:fixed;left:50%;top:16px;transform:translateX(-50%) translateY(-150%);z-index:90;width:calc(100% - 26px);max-width:440px;border-radius:14px;padding:13px 15px;display:flex;align-items:center;gap:12px;box-shadow:0 16px 44px rgba(0,0,0,.55);opacity:0;transition:transform .45s cubic-bezier(.2,.9,.25,1.25),opacity .3s;pointer-events:none}
+  .rankpop.on{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto}
+  .rankpop.lead{background:linear-gradient(135deg,#3a2e07,#171205);border:1px solid var(--gold)}
+  .rankpop.last{background:linear-gradient(135deg,#3a0d0d,#170606);border:1px solid rgba(248,113,113,.55)}
+  .rankpop .rp-emo{font-size:30px;line-height:1}
+  .rankpop .rp-tt{font-family:'Oswald';font-weight:700;font-size:14.5px;text-transform:uppercase;letter-spacing:.4px}
+  .rankpop .rp-bd{color:var(--muted);font-size:11.5px;margin-top:2px;line-height:1.3}
+  .rankpop .rp-x{margin-left:auto;align-self:flex-start;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
   :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important}}
 </style>
@@ -309,6 +318,7 @@
   </nav>
 </div>
 <div class="modal" id="predModal"><div class="sheet" id="predSheet"></div></div>
+<div id="rankPop" class="rankpop"></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -411,7 +421,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   function flagImg(ab){var c=ISO[ab];return c?'<img class="flagimg" src="https://flagcdn.com/w40/'+c+'.png" alt="'+esc(ab)+'" loading="lazy">':'';}
   function buildMatches(){return FIX.map(function(f,i){var g=f[0],h=f[1],a=f[2],ko=f[3],res=f[4],br=(h==='BRA'||a==='BRA');return {id:'g'+i,group:'Grupo '+g,kickoff:ko,weight:br?2:1,a:{name:TEAMS[h].n,abbr:h,flag:TEAMS[h].f},b:{name:TEAMS[a].n,abbr:a,flag:TEAMS[a].f},result:res?{h:res[0],a:res[1]}:null};});}
 
-  var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming';
+  var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming',myLastPos=null;
   var $=function(s,r){return (r||document).querySelector(s);},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
@@ -449,7 +459,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   async function savePlayer(p){if(fb){try{await fb.db.ref('bolao/players/'+p.id).set(p);}catch(e){}}else{await setObj(PLAYER_PREFIX+p.id,p,true);}}
   async function delPlayer(pid){if(fb){try{await fb.db.ref('bolao/players/'+pid).remove();}catch(e){}}else{await sDel(PLAYER_PREFIX+pid,true);}players=players.filter(function(x){return x.id!==pid;});}
   async function saveCfg(){if(fb){try{await fb.db.ref('bolao/config').set(cfg);}catch(e){}}else{await setObj(CFG_KEY,cfg,true);}}
-  function liveRerender(){if(!me)return;if($('#ranking').classList.contains('on'))renderRanking();else if($('#resultados').classList.contains('on')&&isAdmin)renderResultados();else if($('#palpites').classList.contains('on')){var ae=document.activeElement;if(!(ae&&ae.classList&&(ae.classList.contains('ph')||ae.classList.contains('pa'))))renderPalpites();}}
+  function liveRerender(){if(!me)return;checkRankAlerts();if($('#ranking').classList.contains('on'))renderRanking();else if($('#resultados').classList.contains('on')&&isAdmin)renderResultados();else if($('#palpites').classList.contains('on')){var ae=document.activeElement;if(!(ae&&ae.classList&&(ae.classList.contains('ph')||ae.classList.contains('pa'))))renderPalpites();}}
 
   /* ---------- copiar pix ---------- */
   function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('Chave Pix copiada! '+POOL_PIX_DISPLAY,true);},function(){fallbackCopy(t);});}else fallbackCopy(t);}
@@ -497,11 +507,19 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
 
   /* ---------- ranking ---------- */
   function charFor(idx){if(idx===0)return '<div class="char"><span class="spark s1">✨</span><span class="crown">👑</span><span class="face">🤴</span><span class="spark s2">✨</span></div>';if(idx===1)return '<div class="char"><span class="medal">🥈</span></div>';return '<div class="char"><span class="medal">🥉</span></div>';}
+  var rankPopT;
+  function scoringStarted(){return !!(cfg&&cfg.matches&&cfg.matches.some(function(m){return m.result&&new Date(m.kickoff).getTime()>=SCORE_FROM;}));}
+  function notifCtaHtml(){try{if('Notification' in window && Notification.permission==='default')return '<button class="notif-cta" id="notifBtn">🔔 Ativar avisos de liderança e lanterna</button>';}catch(e){}return '';}
+  function requestNotif(){try{if(!('Notification' in window)){toast('Seu navegador não suporta avisos');return;}Notification.requestPermission().then(function(perm){if(perm==='granted'){toast('Avisos ativados! 🔔',true);try{new Notification('Bet Arretado 🤠',{body:'Avisos ativados! Você será avisado ao assumir a liderança ou virar o Cabra Abestado.'});}catch(e){}}else{toast('Avisos não permitidos');}if($('#ranking').classList.contains('on'))renderRanking();});}catch(e){toast('Não foi possível ativar');}}
+  function checkRankAlerts(){if(!me||!cfg||!players.length){myLastPos=null;return;}if(!scoringStarted()){myLastPos=null;return;}var rk=ranked(),n=rk.length,pos=-1;for(var i=0;i<n;i++){if(rk[i].p.id===me.id){pos=i;break;}}if(pos<0){myLastPos=null;return;}var prev=myLastPos;myLastPos=pos;if(prev===null||prev===pos)return;if(pos===0&&prev!==0&&n>1)notifyRank('lead');else if(pos===n-1&&prev!==n-1&&n>3)notifyRank('last');}
+  function notifyRank(kind){var lead=kind==='lead',emo=lead?'🏆':'💀';var tt=lead?'Você assumiu a liderança!':'Virou o Cabra Abestado';var bd=lead?'Tá estribado! Você é o 1º do Bet Arretado agora. 🔥':'Caiu pra última posição do bolão. Bora reagir! 😬';showRankBanner(kind,emo,tt,bd);try{if('Notification' in window&&Notification.permission==='granted')new Notification(emo+' '+tt,{body:bd,tag:'betarretado-rank'});}catch(e){}try{if(navigator.vibrate)navigator.vibrate(lead?[60,40,60]:[140]);}catch(e){}}
+  function hideRankPop(){var el=$('#rankPop');if(el)el.classList.remove('on');}
+  function showRankBanner(kind,emo,tt,bd){var el=$('#rankPop');if(!el)return;el.className='rankpop '+kind;el.innerHTML='<span class="rp-emo">'+emo+'</span><div><div class="rp-tt">'+esc(tt)+'</div><div class="rp-bd">'+esc(bd)+'</div></div><button class="rp-x" id="rpX">✕</button>';void el.offsetWidth;el.classList.add('on');var x=$('#rpX');if(x)x.addEventListener('click',hideRankPop);clearTimeout(rankPopT);rankPopT=setTimeout(hideRankPop,6500);}
   function renderRanking(){
     var root=$('#ranking');
     if(!players.length){root.innerHTML='<div class="rank-head">🏆 <b>Winner takes it all</b> · R$'+ENTRY+'/pessoa</div><div class="empty">Ninguém entrou ainda. Seja o primeiro!</div>';return;}
     var rk=ranked(),anyResult=cfg.matches.some(function(m){return m.result;}),html='';
-    html+='<div class="rank-head">🏆 <b>Winner takes it all</b> · R$'+ENTRY+'/pessoa · quer ficar estribado com R$'+(players.length*ENTRY)+'?</div>';
+    html+='<div class="rank-head">🏆 <b>Winner takes it all</b> · R$'+ENTRY+'/pessoa · quer ficar estribado com R$'+(players.length*ENTRY)+'?</div>';html+=notifCtaHtml();
     var top=rk.slice(0,3);
     if(top.length){var order=[1,0,2];html+='<div class="podium">';order.forEach(function(idx){var r=top[idx];if(!r){html+='<div></div>';return;}var nm=esc(r.p.name.split(' ')[0]);html+='<div class="pod'+(idx===0?' first':'')+'">'+charFor(idx)+'<div class="pname">'+(idx===0?'<span class="fire"><span class="flame">🔥</span> '+nm+' <span class="flame">🔥</span></span>':nm)+'</div><div class="ppts">'+r.st.pts+'</div></div>';});html+='</div>';}
     html+='<table class="rank"><thead><tr><th>#</th><th>Participante</th><th>Pts</th><th title="Placares exatos">🎯</th><th title="Resultados certos">✅</th></tr></thead><tbody>';
@@ -510,6 +528,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
     if(rk.length>3){var lastP=rk[rk.length-1];html+='<div class="icu"><div class="cap">💀 Cabra Abestado</div><div class="icu-scene"><div class="monitor"><svg viewBox="0 0 62 42" preserveAspectRatio="none"><polyline class="ekg" points="0,21 12,21 16,21 19,7 23,35 27,21 40,21 44,14 48,28 52,21 62,21"/></svg><span class="beep"></span></div></div><div class="who-last">O cabra mais abestado: <b>'+esc(lastP.p.name.split(' ')[0])+'</b> 💀</div></div>';}
     if(!anyResult)html+='<div class="empty" style="padding:16px">Os pontos aparecem quando os resultados forem registrados.</div>';
     root.innerHTML=html;
+    var nb=$('#notifBtn');if(nb)nb.addEventListener('click',requestNotif);
   }
 
   /* ---------- resultados / admin ---------- */
