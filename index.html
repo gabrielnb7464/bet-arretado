@@ -187,6 +187,25 @@
   .confirmbtn{background:var(--gold);color:#1a1205;border:none;border-radius:8px;padding:7px 13px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
   .confirmbtn.done{background:var(--panel-2);color:#4ade80;border:1px solid rgba(74,222,128,.4)}
   .confirmbtn:disabled{opacity:.45;cursor:default}
+  .match.exx{position:relative;border-color:#ff8a1e;animation:exxflick 1.2s ease-in-out infinite}
+  @keyframes exxflick{0%,100%{box-shadow:0 0 0 2px rgba(255,138,30,.85),0 0 16px 2px rgba(255,80,0,.45)}50%{box-shadow:0 0 0 2px rgba(255,190,60,1),0 0 26px 7px rgba(255,110,0,.7)}}
+  .match.exx::after{content:"🔥";position:absolute;top:-12px;right:10px;font-size:20px;filter:drop-shadow(0 1px 2px #000)}
+  .exxbtn{margin-top:9px;width:100%;background:linear-gradient(135deg,#3a1d05,#1e1305);border:1px solid #ff8a1e;color:#ffb45a;border-radius:10px;padding:9px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
+  .exxbtn.on{background:linear-gradient(135deg,#ff7a14,#b53e00);color:#fff;border-color:#ffd9a8}
+  .exx-tag{margin-top:9px;text-align:center;font-weight:700;font-size:12px;color:#ffb45a}
+  .duel{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:9px}
+  .duel.chick{border-color:rgba(255,170,40,.5);background:linear-gradient(135deg,#2a1e05,#160f04)}
+  .duel .dl-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-size:13.5px}
+  .duel .dl-top small{color:var(--muted);font-size:11px;text-align:right;white-space:nowrap}
+  .duel .dl-act{display:flex;gap:8px;margin-top:9px}
+  .btn.sm{padding:8px 10px;font-size:12.5px;border-radius:9px;width:auto;flex:1}
+  .btn.ghost{background:var(--panel);border:1px solid var(--line);color:var(--txt)}
+  .dl-opps{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+  .opp{background:var(--panel);border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+  .dl-note{color:var(--muted);font-size:12px;margin-top:7px}
+  .dl-st{display:inline-block;margin-top:8px;font-size:12px;font-weight:700}
+  .dl-st.pend{color:var(--muted)}.dl-st.acc{color:var(--gold)}.dl-st.dec{color:#ffb45a}.dl-st.win{color:#4ade80}.dl-st.draw{color:var(--muted)}
+  .duelbadge{font-size:10.5px;color:#ffb45a;font-weight:700;white-space:nowrap}
   .prow{display:flex;align-items:center;gap:9px;background:var(--panel-2);border:1px solid var(--line);border-radius:11px;padding:10px 11px;margin-bottom:8px;font-size:13px}
   .prow .pn{font-weight:600}.prow .px{font-family:'Oswald';color:var(--muted);font-size:12px;word-break:break-all}
   .prow .pay{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11.5px;white-space:nowrap}.prow .pay input{width:17px;height:17px;accent-color:var(--green)}
@@ -296,6 +315,7 @@
   <section id="palpites" class="view on"></section>
   <section id="ranking" class="view"></section>
   <section id="resultados" class="view"></section>
+  <section id="galo" class="view"></section>
 
   <section id="regras" class="view">
     <div class="card" style="border-color:rgba(244,196,48,.35)">
@@ -333,11 +353,20 @@
       <h2>🔐 Login e senha</h2>
       <p class="lead" style="margin:0">Seu <b>login é o seu nome</b> e sua <b>senha é o seu CPF</b> (só números). Assim ninguém entra na conta dos outros. O CPF fica guardado <b>embaralhado</b> — nem o app enxerga seu número.</p>
     </div>
+    <div class="card" style="border-color:rgba(255,138,30,.45)">
+      <h2>🔥 Palpite Exxtourado</h2>
+      <p class="lead" style="margin:0">Escolha <b>1 jogo do mata-mata</b> pra valer <b style="color:#ffb45a">×2</b> (jogo do Brasil: <b style="color:#ffb45a">×4</b>). Libera pra quem cravou <b>2+ placares exatos</b>. Dá pra trocar até o jogo travar; depois fica fixo. O escolhido fica com <b>moldura pegando fogo</b>. 🔥</p>
+    </div>
+    <div class="card" style="border-color:rgba(255,170,40,.45)">
+      <h2>🐓 Galo de Rinha</h2>
+      <p class="lead" style="margin:0">Duelo 1×1 só no <b>mata-mata</b>. Desafie quem está à sua frente ou empatado (mín. 10 pts — e você também precisa de 10). 1 desafio por jogo, e você pode receber vários. O desafiado responde até o início do jogo: quem <b>recusa ou não responde</b> leva 🐔 e <b>−3</b> (desafiante +3). Aceitou: quem pontuar melhor naquele jogo ganha <b>+10</b> (o outro −10); empate, ninguém pontua. O saldo dos duelos entra no ranking com o selo ⚔️.</p>
+    </div>
   </section>
 
   <nav class="bottom" id="nav" role="tablist">
     <button role="tab" data-view="palpites" aria-selected="true"><span class="ic">⚽</span>Palpites</button>
     <button role="tab" data-view="ranking" aria-selected="false"><span class="ic">🏆</span>Ranking</button>
+    <button role="tab" data-view="galo" aria-selected="false"><span class="ic">🐓</span>Galo</button>
     <button role="tab" data-view="resultados" aria-selected="false"><span class="ic">🛠️</span>Resultados</button>
     <button role="tab" data-view="regras" aria-selected="false"><span class="ic">📋</span>Regras</button>
   </nav>
@@ -446,7 +475,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   function flagImg(ab){var c=ISO[ab];return c?'<img class="flagimg" src="https://flagcdn.com/w40/'+c+'.png" alt="'+esc(ab)+'" loading="lazy">':'';}
   function buildMatches(){return FIX.map(function(f,i){var g=f[0],h=f[1],a=f[2],ko=f[3],res=f[4],br=(h==='BRA'||a==='BRA');return {id:'g'+i,group:'Grupo '+g,kickoff:ko,weight:br?2:1,a:{name:TEAMS[h].n,abbr:h,flag:TEAMS[h].f},b:{name:TEAMS[a].n,abbr:a,flag:TEAMS[a].f},result:res?{h:res[0],a:res[1]}:null};});}
 
-  var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming',myLastPos=null;
+  var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming',myLastPos=null,duels=[];
   var $=function(s,r){return (r||document).querySelector(s);},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
@@ -457,9 +486,23 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   function fmtRem(ms){var s=Math.floor(ms/1000),d=Math.floor(s/86400);s-=d*86400;var h=Math.floor(s/3600);s-=h*3600;var mi=Math.floor(s/60);if(d>0)return d+'d '+h+'h';if(h>0)return h+'h '+mi+'min';return Math.max(1,mi)+'min';}
 
   function scoreBase(p,res){if(!p||!res||p.h==null||p.a==null)return {pts:0,exact:false,outcome:false,saldo:false};var ph=+p.h,pa=+p.a,ah=+res.h,aa=+res.a;if(ph===ah&&pa===aa)return {pts:25,exact:true,outcome:true,saldo:true};var ps=Math.sign(ph-pa),as=Math.sign(ah-aa);if(ps===as){if(as!==0&&(ph-pa)===(ah-aa))return {pts:18,exact:false,outcome:true,saldo:true};return {pts:12,exact:false,outcome:true,saldo:as===0};}if(ph===ah||pa===aa)return {pts:5,exact:false,outcome:false,saldo:false};return {pts:0,exact:false,outcome:false,saldo:false};}
-  function scoreFor(p,m){var s=scoreBase(p,m.result);s.pts*=(m.weight||1);return s;}
-  function statsFor(p){var pts=0,exact=0,outc=0,saldo=0,diff=0;cfg.matches.forEach(function(m){if(!m.result)return;if(new Date(m.kickoff).getTime()<SCORE_FROM)return;var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null){diff+=8;return;}var s=scoreFor(pr,m);pts+=s.pts;if(s.exact)exact++;if(s.outcome)outc++;if(s.saldo)saldo++;diff+=Math.abs(pr.h-m.result.h)+Math.abs(pr.a-m.result.a);});return {pts:pts,exact:exact,outc:outc,saldo:saldo,diff:diff};}
+  function scoreForP(p,m,exx){var s=scoreBase(p,m.result);s.pts*=(m.weight||1);if(exx)s.pts*=2;return s;}
+  function scoreFor(p,m){return scoreForP(p,m,false);}
+  function statsFor(p){var base=0,exact=0,outc=0,saldo=0,diff=0;cfg.matches.forEach(function(m){if(!m.result)return;if(new Date(m.kickoff).getTime()<SCORE_FROM)return;var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null){diff+=8;return;}var s=scoreForP(pr,m,p.exx===m.id);base+=s.pts;if(s.exact)exact++;if(s.outcome)outc++;if(s.saldo)saldo++;diff+=Math.abs(pr.h-m.result.h)+Math.abs(pr.a-m.result.a);});var dj=duelAdj(p.id);return {pts:base+dj,base:base,duel:dj,exact:exact,outc:outc,saldo:saldo,diff:diff};}
   function ranked(){return players.map(function(p){return {p:p,st:statsFor(p)};}).sort(function(A,B){var a=A.st,b=B.st;return b.pts-a.pts||b.exact-a.exact||b.outc-a.outc||b.saldo-a.saldo||a.diff-b.diff||A.p.name.localeCompare(B.p.name,'pt');});}
+  function matchById(id){return cfg&&cfg.matches?cfg.matches.filter(function(x){return x.id===id;})[0]:null;}
+  function isKO(m){return !!(m&&m.id&&m.id.indexOf('m_')===0);}
+  function matchStarted(id){var m=matchById(id);return m?Date.now()>=new Date(m.kickoff).getTime():false;}
+  function playerById(id){return players.filter(function(p){return p.id===id;})[0]||null;}
+  function exxEligible(pl){return !!(pl&&statsFor(pl).exact>=2);}
+  function duelAdj(pid){var adj=0;duels.forEach(function(d){if(d.status==='declined'){if(d.fromId===pid)adj+=3;if(d.toId===pid)adj-=3;}else if(d.status==='done'&&d.winner&&d.winner!=='tie'){var loser=d.winner===d.fromId?d.toId:d.fromId;if(d.winner===pid)adj+=10;if(loser===pid)adj-=10;}});return adj;}
+  async function saveDuel(d){if(fb){try{await fb.db.ref('bolao/duels/'+d.id).set(d);}catch(e){}}else{var o=await getObj('bolao_duels',true)||{};o[d.id]=d;await setObj('bolao_duels',o,true);}var ix=-1;for(var i=0;i<duels.length;i++)if(duels[i].id===d.id)ix=i;if(ix>=0)duels[ix]=d;else duels.push(d);}
+  async function resolveDuels(){if(!cfg||!cfg.matches||!duels||!duels.length)return;var now=Date.now();for(var i=0;i<duels.length;i++){var d=duels[i];var m=matchById(d.matchId);if(!m)continue;if(d.status==='pending'&&now>=new Date(m.kickoff).getTime()){d.status='declined';d.auto=true;d.winner=d.fromId;await saveDuel(d);}else if(d.status==='accepted'&&m.result){var pf=playerById(d.fromId),pt=playerById(d.toId);var sf=pf?scoreForP((pf.predictions||{})[m.id],m,pf.exx===m.id).pts:0;var stt=pt?scoreForP((pt.predictions||{})[m.id],m,pt.exx===m.id).pts:0;d.sf=sf;d.st=stt;d.winner=sf>stt?d.fromId:(stt>sf?d.toId:'tie');d.status='done';await saveDuel(d);}}}
+  async function createDuel(matchId,toId){if(!me)return;var meSt=statsFor(me);if(meSt.pts<10){toast('Você precisa de 10 pts pra desafiar');return;}var tp=playerById(toId);if(!tp)return;var tSt=statsFor(tp);if(tSt.pts<10){toast('Esse jogador ainda não tem 10 pts');return;}if(tSt.pts<meSt.pts){toast('Só dá pra desafiar quem está à frente ou empatado');return;}var m=matchById(matchId);if(!m||!isKO(m)){toast('Só vale no mata-mata');return;}if(Date.now()>=new Date(m.kickoff).getTime()){toast('Esse jogo já começou');return;}if(duels.some(function(d){return d.matchId===matchId&&d.fromId===me.id;})){toast('Você já desafiou alguém neste jogo');return;}var d={id:'d'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),matchId:matchId,fromId:me.id,toId:toId,status:'pending',winner:null,created:Date.now()};await saveDuel(d);toast('Desafio enviado! ⚔️',true);renderGalo();}
+  async function acceptDuel(id){var d=duels.filter(function(x){return x.id===id;})[0];if(!d||!me||d.toId!==me.id||d.status!=='pending')return;if(matchStarted(d.matchId)){toast('Tarde demais, o jogo começou');return;}d.status='accepted';await saveDuel(d);toast('Duelo aceito! ⚔️',true);renderGalo();}
+  async function declineDuel(id){var d=duels.filter(function(x){return x.id===id;})[0];if(!d||!me||d.toId!==me.id||d.status!=='pending')return;d.status='declined';d.winner=d.fromId;await saveDuel(d);toast('Você recusou — 🐔');renderGalo();}
+  async function toggleExx(mid){if(!me)return;if(!exxEligible(me)){toast('Crave 2 placares exatos pra liberar');return;}if(matchStarted(mid)){toast('Esse jogo já começou');return;}if(me.exx&&me.exx!==mid&&matchStarted(me.exx)){toast('Seu Exxtourado já travou em outro jogo');return;}if(me.exx===mid){me.exx=null;toast('Palpite Exxtourado removido');}else{me.exx=mid;toast('🔥 Palpite Exxtourado neste jogo!',true);}await savePlayer(me);renderPalpites();}
+  function exxCtl(m){if(!isKO(m)||!me)return '';var chosen=me.exx===m.id;if(!exxEligible(me))return chosen?'<div class="exx-tag">🔥 Palpite Exxtourado</div>':'';var thisStarted=matchStarted(m.id),lockedFixed=me.exx&&matchStarted(me.exx);if(chosen){if(thisStarted||lockedFixed)return '<div class="exx-tag">🔥 Palpite Exxtourado '+(m.weight===2?'(×4)':'(×2)')+'</div>';return '<button class="exxbtn on" data-exx="'+esc(m.id)+'">🔥 Exxtourado ativo · tocar pra remover</button>';}if(thisStarted||lockedFixed)return '';return '<button class="exxbtn" data-exx="'+esc(m.id)+'">🔥 Usar Palpite Exxtourado ('+(m.weight===2?'×4':'×2')+')</button>';}
 
   /* ---------- load / save ---------- */
   async function loadAll(){
@@ -469,14 +512,17 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
       if(!cfg||cfg.dataVersion!==DATA_VERSION){cfg={dataVersion:DATA_VERSION,matches:buildMatches()};await fb.db.ref('bolao/config').set(cfg);}
       if(!cfg.matches)cfg.matches=buildMatches();
       players=root.players?Object.keys(root.players).map(function(k){return root.players[k];}):[];
-      fb.db.ref('bolao/config').on('value',function(s){var v=s.val();if(v){cfg=v;if(!cfg.matches)cfg.matches=buildMatches();liveRerender();}});
+      duels=root.duels?Object.keys(root.duels).map(function(k){return root.duels[k];}):[];
+      fb.db.ref('bolao/config').on('value',function(s){var v=s.val();if(v){cfg=v;if(!cfg.matches)cfg.matches=buildMatches();resolveDuels();liveRerender();}});
       fb.db.ref('bolao/players').on('value',function(s){var v=s.val()||{};players=Object.keys(v).map(function(k){return v[k];});if(me){var mm=players.filter(function(p){return p.id===me.id;})[0];if(mm)me=mm;}liveRerender();});
+      fb.db.ref('bolao/duels').on('value',function(s){var v=s.val()||{};duels=Object.keys(v).map(function(k){return v[k];});resolveDuels();liveRerender();});
     } else {
       cfg=await getObj(CFG_KEY,true);
       if(!cfg||cfg.dataVersion!==DATA_VERSION){cfg={dataVersion:DATA_VERSION,matches:buildMatches()};await setObj(CFG_KEY,cfg,true);}
       if(!cfg.matches)cfg.matches=buildMatches();
       players=[];var lst=await sList(PLAYER_PREFIX,true),keys=(lst&&lst.keys)||[];
       for(var i=0;i<keys.length;i++){var pl=await getObj(keys[i],true);if(pl&&pl.id)players.push(pl);}
+      var _do=await getObj('bolao_duels',true)||{};duels=Object.keys(_do).map(function(k){return _do[k];});
     }
     var meRef=await getObj(ME_KEY,false);me=null;
     if(meRef&&meRef.id)me=players.filter(function(p){return p.id===meRef.id;})[0]||null;
@@ -484,7 +530,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   async function savePlayer(p){if(fb){try{await fb.db.ref('bolao/players/'+p.id).set(p);}catch(e){}}else{await setObj(PLAYER_PREFIX+p.id,p,true);}}
   async function delPlayer(pid){if(fb){try{await fb.db.ref('bolao/players/'+pid).remove();}catch(e){}}else{await sDel(PLAYER_PREFIX+pid,true);}players=players.filter(function(x){return x.id!==pid;});}
   async function saveCfg(){if(fb){try{await fb.db.ref('bolao/config').set(cfg);}catch(e){}}else{await setObj(CFG_KEY,cfg,true);}}
-  function liveRerender(){if(!me)return;checkRankAlerts();if($('#ranking').classList.contains('on'))renderRanking();else if($('#resultados').classList.contains('on')&&isAdmin)renderResultados();else if($('#palpites').classList.contains('on')){var ae=document.activeElement;if(!(ae&&ae.classList&&(ae.classList.contains('ph')||ae.classList.contains('pa'))))renderPalpites();}}
+  function liveRerender(){if(!me)return;checkRankAlerts();if($('#ranking').classList.contains('on'))renderRanking();else if($('#galo').classList.contains('on'))renderGalo();else if($('#resultados').classList.contains('on')&&isAdmin)renderResultados();else if($('#palpites').classList.contains('on')){var ae=document.activeElement;if(!(ae&&ae.classList&&(ae.classList.contains('ph')||ae.classList.contains('pa'))))renderPalpites();}}
 
   /* ---------- copiar pix ---------- */
   function copyText(t){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){toast('Chave Pix copiada! '+POOL_PIX_DISPLAY,true);},function(){fallbackCopy(t);});}else fallbackCopy(t);}
@@ -517,18 +563,19 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
     var lastDay='';
     list.forEach(function(m){
       var dk=dayKey(m.kickoff);if(filter!=='brasil'&&dk!==lastDay){lastDay=dk;html+='<div class="daylabel">'+esc(dk)+'</div>';}
-      var li=lockInfo(m),pr=(me.predictions&&me.predictions[m.id])||{h:'',a:''},locked=li.state!=='aberto',hasPred=(pr.h!==''&&pr.h!=null&&pr.a!==''&&pr.a!=null),sc=m.result?scoreFor(pr,m):null,counts=new Date(m.kickoff).getTime()>=SCORE_FROM;
+      var li=lockInfo(m),pr=(me.predictions&&me.predictions[m.id])||{h:'',a:''},locked=li.state!=='aberto',hasPred=(pr.h!==''&&pr.h!=null&&pr.a!==''&&pr.a!=null),sc=m.result?scoreForP(pr,m,me&&me.exx===m.id):null,counts=new Date(m.kickoff).getTime()>=SCORE_FROM;
       var st=li.state==='final'?'Encerrado':li.state==='fechado'?'Fechado':'Aberto';
-      html+='<div class="match'+(m.weight===2?' br':'')+'" data-mid="'+esc(m.id)+'"><div class="row1"><span class="chip">'+esc(m.group)+(m.weight===2?'</span><span class="br-badge">VALE 2×</span>':'</span>')+'<span class="status '+li.state+'">'+st+'</span></div>'+
+      html+='<div class="match'+(m.weight===2?' br':'')+(me&&me.exx===m.id?' exx':'')+'" data-mid="'+esc(m.id)+'"><div class="row1"><span class="chip">'+esc(m.group)+(m.weight===2?'</span><span class="br-badge">VALE 2×</span>':'</span>')+'<span class="status '+li.state+'">'+st+'</span></div>'+
         '<div class="scoreboard"><div class="team"><div class="tline">'+flagImg(m.a.abbr)+'<span class="abbr">'+esc(m.a.abbr)+'</span></div><span class="full">'+esc(m.a.name)+'</span></div>'+
         '<div class="pred"><input type="number" min="0" max="30" inputmode="numeric" class="ph" value="'+esc(pr.h)+'" '+(locked?'disabled':'')+' aria-label="Gols '+esc(m.a.name)+'"><span class="x">×</span><input type="number" min="0" max="30" inputmode="numeric" class="pa" value="'+esc(pr.a)+'" '+(locked?'disabled':'')+' aria-label="Gols '+esc(m.b.name)+'"></div>'+
         '<div class="team"><div class="tline">'+flagImg(m.b.abbr)+'<span class="abbr">'+esc(m.b.abbr)+'</span></div><span class="full">'+esc(m.b.name)+'</span></div></div>'+
         '<div class="meta"><span class="when">'+esc(brt(m.kickoff))+(li.state==='aberto'?'<span class="lock'+(li.rem<10800000?' soon':'')+'">Fecha em '+fmtRem(li.rem)+'</span>':(li.state==='fechado'?'<span class="lock">Palpites encerrados</span>':''))+'</span>'+
-        (m.result?'<span class="result-line"><span class="official">Oficial '+m.result.h+'×'+m.result.a+'</span>'+(counts?'<span class="pts '+(sc.exact?'exato':sc.pts>0?'win':'zero')+'">'+(sc.pts>0?'+':'')+sc.pts+'</span>':'<span class="pts zero">histórico</span>')+'</span>':'<button class="confirmbtn'+(hasPred?' done':'')+'" data-confirm="'+esc(m.id)+'"'+(locked?' disabled':'')+'>'+(hasPred?'Confirmado ✓':'Confirmar palpite')+'</button><span class="saved" data-save="'+esc(m.id)+'">salvo ✓</span>')+'</div>'+(Date.now()>=new Date(m.kickoff).getTime()?'<button class="predbtn" data-preds="'+esc(m.id)+'">👀 Ver palpites de todos</button>':'')+'</div>';
+        (m.result?'<span class="result-line"><span class="official">Oficial '+m.result.h+'×'+m.result.a+'</span>'+(counts?'<span class="pts '+(sc.exact?'exato':sc.pts>0?'win':'zero')+'">'+(sc.pts>0?'+':'')+sc.pts+'</span>':'<span class="pts zero">histórico</span>')+'</span>':'<button class="confirmbtn'+(hasPred?' done':'')+'" data-confirm="'+esc(m.id)+'"'+(locked?' disabled':'')+'>'+(hasPred?'Confirmado ✓':'Confirmar palpite')+'</button><span class="saved" data-save="'+esc(m.id)+'">salvo ✓</span>')+'</div>'+(Date.now()>=new Date(m.kickoff).getTime()?'<button class="predbtn" data-preds="'+esc(m.id)+'">👀 Ver palpites de todos</button>':'')+exxCtl(m)+'</div>';
     });
     root.innerHTML=html;bindFilters();
     var pp=$('#potPix');if(pp)pp.addEventListener('click',function(){copyText(POOL_PIX_COPY);});
     $$('#palpites .predbtn').forEach(function(b){b.addEventListener('click',function(){openPreds(b.dataset.preds);});});
+    $$('#palpites .exxbtn').forEach(function(b){b.addEventListener('click',function(){toggleExx(b.dataset.exx);});});
     $$('#palpites .match').forEach(function(card){var mid=card.dataset.mid,m=cfg.matches.filter(function(x){return x.id===mid;})[0],ph=$('.ph',card),pa=$('.pa',card),cb=$('.confirmbtn[data-confirm="'+mid+'"]',card);
       function save(){if(ph.disabled)return;var hv=ph.value===''?null:Math.max(0,Math.min(30,parseInt(ph.value,10))),av=pa.value===''?null:Math.max(0,Math.min(30,parseInt(pa.value,10)));me.predictions=me.predictions||{};if(hv==null&&av==null)delete me.predictions[mid];else me.predictions[mid]={h:hv,a:av};savePlayer(me);if(cb){cb.classList.add('done');cb.textContent='Confirmado ✓';}var s=$('.saved[data-save="'+mid+'"]',card);if(s){s.classList.add('show');setTimeout(function(){s.classList.remove('show');},1100);}if(m&&brazilWin(m,hv,av)){try{var au=new Audio(BRAZIL_WIN_SOUND);au.play().catch(function(){});}catch(e){}}}
       function dirty(){if(cb&&!ph.disabled){cb.classList.remove('done');cb.textContent='Confirmar palpite';}}
@@ -547,6 +594,29 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   function notifyRank(kind){var lead=kind==='lead',emo=lead?'🏆':'💀';var tt=lead?'Você assumiu a liderança!':'Virou o Cabra Abestado';var bd=lead?'Tá estribado! Você é o 1º do Bet Arretado agora. 🔥':'Caiu pra última posição do bolão. Bora reagir! 😬';showRankBanner(kind,emo,tt,bd);try{if('Notification' in window&&Notification.permission==='granted')new Notification(emo+' '+tt,{body:bd,tag:'betarretado-rank'});}catch(e){}try{if(navigator.vibrate)navigator.vibrate(lead?[60,40,60]:[140]);}catch(e){}}
   function hideRankPop(){var el=$('#rankPop');if(el)el.classList.remove('on');}
   function showRankBanner(kind,emo,tt,bd){var el=$('#rankPop');if(!el)return;el.className='rankpop '+kind;el.innerHTML='<span class="rp-emo">'+emo+'</span><div><div class="rp-tt">'+esc(tt)+'</div><div class="rp-bd">'+esc(bd)+'</div></div><button class="rp-x" id="rpX">✕</button>';void el.offsetWidth;el.classList.add('on');var x=$('#rpX');if(x)x.addEventListener('click',hideRankPop);clearTimeout(rankPopT);rankPopT=setTimeout(hideRankPop,6500);}
+  function renderGalo(){var root=$('#galo');if(!root)return;if(!me){root.innerHTML='';return;}
+    var meSt=statsFor(me);
+    var html='<div class="rank-head">🐓 <b>Galo de Rinha</b> · duelos no mata-mata</div>';
+    var koMatches=cfg.matches.filter(isKO).sort(function(a,b){return new Date(a.kickoff)-new Date(b.kickoff);});
+    if(!koMatches.length){html+='<div class="card"><p class="lead" style="margin:0">A rinha começa nas <b>oitavas de final</b>. Assim que os jogos de mata-mata forem cadastrados, você poderá desafiar a galera. 🐓</p></div>';root.innerHTML=html;return;}
+    var toAnswer=duels.filter(function(d){return d.toId===me.id&&d.status==='pending'&&!matchStarted(d.matchId);});
+    if(toAnswer.length){html+='<div class="card"><h2>⚔️ Desafios pra você responder</h2>';toAnswer.forEach(function(d){var fp=playerById(d.fromId),m=matchById(d.matchId);html+='<div class="duel"><div class="dl-top"><b>'+esc(fp?fp.name:'?')+' te desafiou</b><small>'+(m?esc(m.a.abbr)+' × '+esc(m.b.abbr)+' · '+esc(m.group):'')+'</small></div><div class="dl-act"><button class="btn sm acc" data-acc="'+esc(d.id)+'">Aceitar</button><button class="btn sm ghost dec" data-dec="'+esc(d.id)+'">Recusar 🐔</button></div></div>';});html+='</div>';}
+    html+='<div class="card"><h2>Criar desafio</h2>';
+    if(meSt.pts<10){html+='<p class="lead" style="margin:0">Você precisa de <b>10 pontos</b> no ranking pra desafiar (você tem '+meSt.pts+').</p>';}
+    else{var openKO=koMatches.filter(function(m){return Date.now()<new Date(m.kickoff).getTime();});
+      if(!openKO.length){html+='<p class="lead" style="margin:0">Nenhum jogo de mata-mata aberto pra desafiar agora.</p>';}
+      else{html+='<p class="lead" style="margin:0 0 8px">Desafie quem está <b>à sua frente ou empatado</b> (mín. 10 pts). 1 desafio por jogo.</p>';var rk=ranked();openKO.forEach(function(m){var already=duels.some(function(d){return d.matchId===m.id&&d.fromId===me.id;});var elig=rk.filter(function(r){return r.p.id!==me.id&&r.st.pts>=10&&r.st.pts>=meSt.pts;}).map(function(r){return r.p;});html+='<div class="duel"><div class="dl-top"><b>'+esc(m.a.abbr)+' × '+esc(m.b.abbr)+'</b><small>'+esc(m.group)+' · '+esc(brt(m.kickoff))+'</small></div>';if(already)html+='<div class="dl-note">Você já desafiou alguém neste jogo ✓</div>';else if(!elig.length)html+='<div class="dl-note">Ninguém elegível pra desafiar aqui ainda.</div>';else{html+='<div class="dl-opps">';elig.forEach(function(op){html+='<button class="opp" data-m="'+esc(m.id)+'" data-to="'+esc(op.id)+'">⚔️ '+esc(op.name)+'</button>';});html+='</div>';}html+='</div>';});}}
+    html+='</div>';
+    html+='<div class="card"><h2>🏟️ Arena · todos os duelos</h2>';
+    var arena=duels.slice().sort(function(a,b){return (b.created||0)-(a.created||0);});
+    if(!arena.length)html+='<div class="empty" style="padding:8px 0">Nenhum duelo ainda. Seja o primeiro a chamar pra briga! 🐓</div>';
+    arena.forEach(function(d){var fp=playerById(d.fromId),tp=playerById(d.toId),m=matchById(d.matchId);var fn=esc(fp?fp.name:'?'),tn=esc(tp?tp.name:'?');var cls='duel',body='';if(d.status==='pending'){body='<span class="dl-st pend">aguardando resposta de '+tn+'</span>';}else if(d.status==='accepted'){body='<span class="dl-st acc">valendo! ⚔️</span>';}else if(d.status==='declined'){cls+=' chick';body='<span class="dl-st dec">'+tn+' 🐔 '+(d.auto?'não respondeu a tempo':'recusou')+' · '+fn+' +3 / '+tn+' −3</span>';}else if(d.status==='done'){if(d.winner==='tie')body='<span class="dl-st draw">empate ('+(d.sf!=null?d.sf:'?')+'×'+(d.st!=null?d.st:'?')+') · ninguém pontua</span>';else{var wn=d.winner===d.fromId?fn:tn,ln=d.winner===d.fromId?tn:fn;body='<span class="dl-st win">🏆 '+wn+' venceu · +10 / '+ln+' −10</span>';}}html+='<div class="'+cls+'"><div class="dl-top"><b>'+fn+' ⚔️ '+tn+'</b><small>'+(m?esc(m.a.abbr)+' × '+esc(m.b.abbr)+' · '+esc(m.group):'')+'</small></div>'+body+'</div>';});
+    html+='</div>';
+    root.innerHTML=html;
+    $$('#galo .acc').forEach(function(b){b.addEventListener('click',function(){acceptDuel(b.dataset.acc);});});
+    $$('#galo .dec').forEach(function(b){b.addEventListener('click',function(){if(confirm('Recusar o duelo? Você perde 3 pontos e leva um 🐔.'))declineDuel(b.dataset.dec);});});
+    $$('#galo .opp').forEach(function(b){b.addEventListener('click',function(){if(confirm('Desafiar '+b.textContent.replace('⚔️ ','')+' neste jogo?'))createDuel(b.dataset.m,b.dataset.to);});});
+  }
   function renderRanking(){
     var root=$('#ranking');
     if(!players.length){root.innerHTML='<div class="rank-head">🏆 <b>Winner takes it all</b> · R$'+ENTRY+'/pessoa</div><div class="empty">Ninguém entrou ainda. Seja o primeiro!</div>';return;}
@@ -555,7 +625,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
     var top=rk.slice(0,3);
     if(top.length){var order=[1,0,2];html+='<div class="podium">';order.forEach(function(idx){var r=top[idx];if(!r){html+='<div></div>';return;}var nm=esc(r.p.name.split(' ')[0]);html+='<div class="pod'+(idx===0?' first':'')+'">'+charFor(idx)+'<div class="pname">'+(idx===0?'<span class="fire"><span class="flame">🔥</span> '+nm+' <span class="flame">🔥</span></span>':nm)+'</div><div class="ppts">'+r.st.pts+'</div></div>';});html+='</div>';}
     html+='<table class="rank"><thead><tr><th>#</th><th>Participante</th><th>Pts</th><th title="Placares exatos">🎯</th><th title="Resultados certos">✅</th></tr></thead><tbody>';
-    rk.forEach(function(r,i){var mine=me&&r.p.id===me.id,last=(i===rk.length-1&&rk.length>3);var nm=esc(r.p.name);html+='<tr class="'+(mine?'me-row ':'')+(last?'last-row':'')+'"><td class="pos">'+(i+1)+(last?' 🔦':'')+'</td><td>'+(i===0?'<span class="fire">'+nm+'</span>':nm)+'</td><td class="tp">'+r.st.pts+'</td><td>'+r.st.exact+'</td><td>'+r.st.outc+'</td></tr>';});
+    rk.forEach(function(r,i){var mine=me&&r.p.id===me.id,last=(i===rk.length-1&&rk.length>3);var nm=esc(r.p.name);html+='<tr class="'+(mine?'me-row ':'')+(last?'last-row':'')+'"><td class="pos">'+(i+1)+(last?' 🔦':'')+'</td><td>'+(i===0?'<span class="fire">'+nm+'</span>':nm)+(r.st.duel?' <span class="duelbadge">⚔️'+(r.st.duel>0?'+':'')+r.st.duel+'</span>':'')+'</td><td class="tp">'+r.st.pts+'</td><td>'+r.st.exact+'</td><td>'+r.st.outc+'</td></tr>';});
     html+='</tbody></table>';
     if(rk.length>3){var lastP=rk[rk.length-1];html+='<div class="icu"><div class="cap">💀 Cabra Abestado</div><div class="icu-scene"><div class="monitor"><svg viewBox="0 0 62 42" preserveAspectRatio="none"><polyline class="ekg" points="0,21 12,21 16,21 19,7 23,35 27,21 40,21 44,14 48,28 52,21 62,21"/></svg><span class="beep"></span></div></div><div class="who-last">O cabra mais abestado: <b>'+esc(lastP.p.name.split(' ')[0])+'</b> 💀</div></div>';}
     if(!anyResult)html+='<div class="empty" style="padding:16px">Os pontos aparecem quando os resultados forem registrados.</div>';
@@ -606,9 +676,9 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
   async function toggleReaction(matchId,predId,emoji){ if(!me)return; if(fb){var ref=fb.db.ref('bolao/reactions/'+matchId+'/'+predId+'/'+emoji+'/'+me.id);var cur=(await ref.once('value')).val();if(cur)await ref.remove();else await ref.set(true);} else {var o=await getObj('bolao_reactions',true)||{};o[matchId]=o[matchId]||{};o[matchId][predId]=o[matchId][predId]||{};o[matchId][predId][emoji]=o[matchId][predId][emoji]||{};if(o[matchId][predId][emoji][me.id])delete o[matchId][predId][emoji][me.id];else o[matchId][predId][emoji][me.id]=true;await setObj('bolao_reactions',o,true);} }
   function closePreds(){var pm=$('#predModal');if(pm)pm.classList.remove('on');}
   async function openPreds(mid){ var m=cfg.matches.filter(function(x){return x.id===mid;})[0]; if(!m)return; var sheet=$('#predSheet'); $('#predModal').classList.add('on'); sheet.innerHTML='<button class="closex" id="predClose">✕</button><h3>Palpites · '+esc(m.a.abbr)+' × '+esc(m.b.abbr)+'</h3><div class="sub2">Carregando…</div>'; var reacts=await loadReactions(mid); var subs=players.filter(function(p){return p.predictions&&p.predictions[mid]&&p.predictions[mid].h!=null;}); var body='<button class="closex" id="predClose">✕</button><h3>Palpites · '+esc(m.a.abbr)+' × '+esc(m.b.abbr)+'</h3><div class="sub2">'+(m.result?'Oficial '+m.result.h+'×'+m.result.a+' · ':'')+subs.length+' palpite(s) · reaja! 😋</div>'; if(!subs.length){body+='<div class="empty">Ninguém palpitou neste jogo.</div>';} subs.sort(function(a,b){return a.name.localeCompare(b.name,'pt');}).forEach(function(p){var pr=p.predictions[mid];body+='<div class="pcard"><div class="ptop"><span class="pwho">'+esc(p.name)+'</span><span class="pscore">'+pr.h+' × '+pr.a+'</span></div><div class="reacts">'+REACT_EMOJIS.map(function(em){var users=(reacts[p.id]&&reacts[p.id][em])||{};var n=Object.keys(users).length;var mine=(me&&users[me.id])?' mine':'';return '<button class="react'+mine+'" data-pid="'+esc(p.id)+'" data-em="'+em+'">'+em+(n>0?'<span class="rc">'+n+'</span>':'')+'</button>';}).join('')+'</div></div>';}); sheet.innerHTML=body; $('#predClose').addEventListener('click',closePreds); $$('.react',sheet).forEach(function(b){b.addEventListener('click',async function(){await toggleReaction(mid,b.dataset.pid,b.dataset.em);openPreds(mid);});}); }
-  function switchView(name){if(!me){showRegister();return;}$('#register').style.display='none';$$('.view').forEach(function(v){v.classList.toggle('on',v.id===name);});$$('#nav button').forEach(function(b){b.setAttribute('aria-selected',b.dataset.view===name?'true':'false');});window.scrollTo(0,0);if(name==='palpites')renderPalpites();else if(name==='ranking')renderRanking();else if(name==='resultados')renderResultados();}
+  function switchView(name){if(!me){showRegister();return;}$('#register').style.display='none';$$('.view').forEach(function(v){v.classList.toggle('on',v.id===name);});$$('#nav button').forEach(function(b){b.setAttribute('aria-selected',b.dataset.view===name?'true':'false');});window.scrollTo(0,0);if(name==='palpites')renderPalpites();else if(name==='ranking')renderRanking();else if(name==='galo')renderGalo();else if(name==='resultados')renderResultados();}
   $('#nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(!me){showRegister();return;}switchView(b.dataset.view);});
-  setInterval(function(){if(!me)return;if($('#palpites').classList.contains('on')){var ae=document.activeElement;if(!(ae&&ae.classList&&(ae.classList.contains('ph')||ae.classList.contains('pa'))))renderPalpites();}},30000);
+  setInterval(function(){if(!me)return;resolveDuels();if($('#palpites').classList.contains('on')){var ae=document.activeElement;if(!(ae&&ae.classList&&(ae.classList.contains('ph')||ae.classList.contains('pa'))))renderPalpites();}else if($('#galo').classList.contains('on'))renderGalo();},30000);
 
   startIntro();
   (async function init(){
@@ -616,7 +686,7 @@ var INTRO_AUDIO_URL = "";                          // opcional: .mp3 licenciado 
     $('#pixVal').textContent=POOL_PIX_DISPLAY;
     await initBackend();
     if(!fb){var bn=document.createElement('div');bn.className='banner';bn.style.margin='0 0 14px';bn.innerHTML=FB_ON?'<b>Sem conexão com o servidor:</b> rodando local neste aparelho.':(hasStore?'<b>Prévia no app Claude:</b> dados compartilhados só dentro desta prévia. Publique no GitHub com Firebase para o ranking único.':(LS?'<b>Modo local:</b> dados só neste aparelho. Configure o Firebase (veja o README) para um ranking único entre todos.':'<b>Modo demonstração:</b> os dados não são salvos.'));var app=$('#app');app.insertBefore(bn,$('#palpites'));}
-    await loadAll();
+    await loadAll();await resolveDuels();
     if(me)afterLogin();else showRegister();
   })();
 })();
