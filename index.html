@@ -91,6 +91,8 @@
   .fchip{flex:none;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
   .fchip[aria-pressed="true"]{background:var(--panel-2);color:var(--txt);border-color:var(--teal)}
   .fchip.br[aria-pressed="true"]{border-color:var(--brz);color:var(--brz)}
+  .fchip.ok[aria-pressed="true"]{border-color:var(--green);color:var(--green)}
+  .fchip.ko[aria-pressed="true"]{border-color:var(--red);color:var(--red)}
 
   /* MATCH */
   .daylabel{font-family:'Oswald';font-weight:600;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin:16px 4px 9px}
@@ -557,18 +559,23 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2Zj
   function afterLogin(){var chip=$('#meChip');chip.style.display='flex';$('#meName').textContent=me.name.split(' ')[0];$('#nav').style.visibility='visible';switchView('palpites');}
 
   /* ---------- palpites ---------- */
-  function visibleMatches(){return cfg.matches.filter(function(m){if(filter==='brasil')return m.weight===2;if(filter==='abertos')return lockInfo(m).state==='aberto';return true;});}
+  function myPredOf(m){var pr=me&&me.predictions&&me.predictions[m.id];return (pr&&pr.h!=null&&pr.a!=null&&pr.h!==''&&pr.a!=='')?pr:null;}
+  function myPtsOf(m){var pr=myPredOf(m);return (m.result&&pr)?scoreForP(pr,m,me&&me.exx===m.id).pts:null;}
+  function visibleMatches(){var l=cfg.matches.filter(function(m){if(filter==='brasil')return m.weight===2;if(filter==='abertos')return lockInfo(m).state==='aberto';if(filter==='deibem'||filter==='lasquei'){var pts=myPtsOf(m);if(pts==null)return false;return filter==='deibem'?pts>0:pts===0;}return true;});if(filter==='todos'){l.sort(function(a,b){var ra=a.result?1:0,rb=b.result?1:0;if(ra!==rb)return rb-ra;var ka=new Date(a.kickoff).getTime(),kb=new Date(b.kickoff).getTime();return ra?kb-ka:ka-kb;});}else if(filter==='deibem'){l.sort(function(a,b){var pa=myPtsOf(a)||0,pb=myPtsOf(b)||0;if(pb!==pa)return pb-pa;return new Date(b.kickoff)-new Date(a.kickoff);});}else if(filter==='lasquei'){l.sort(function(a,b){return new Date(b.kickoff)-new Date(a.kickoff);});}return l;}
   function brazilWin(m,hv,av){if(m.weight!==2||hv==null||av==null)return false;var braHome=m.a.abbr==='BRA';var bra=braHome?hv:av,opp=braHome?av:hv;return bra>opp;}
   function renderPalpites(){
     var root=$('#palpites');
     var openCount=cfg.matches.filter(function(m){return lockInfo(m).state==='aberto';}).length;
+    var scoredMine=cfg.matches.filter(function(m){return myPtsOf(m)!=null;});
+    var deibemCount=scoredMine.filter(function(m){return myPtsOf(m)>0;}).length;
+    var lasqueiCount=scoredMine.length-deibemCount;
     var html='<div class="potbar">💸 Buy-in <b>R$'+ENTRY+'</b> · 🏆 winner takes it all<button class="pixmini" id="potPix">📋 Pix</button></div>';
-    html+='<div class="filters" id="filters"><button class="fchip" data-f="abertos" aria-pressed="'+(filter==='abertos')+'">Abertos ('+openCount+')</button><button class="fchip br" data-f="brasil" aria-pressed="'+(filter==='brasil')+'">🇧🇷 Brasil 2×</button><button class="fchip" data-f="todos" aria-pressed="'+(filter==='todos')+'">Todos (72)</button></div>';
+    html+='<div class="filters" id="filters"><button class="fchip" data-f="abertos" aria-pressed="'+(filter==='abertos')+'">Abertos ('+openCount+')</button><button class="fchip br" data-f="brasil" aria-pressed="'+(filter==='brasil')+'">🇧🇷 Brasil 2×</button><button class="fchip" data-f="todos" aria-pressed="'+(filter==='todos')+'">Todos (72)</button><button class="fchip ok" data-f="deibem" aria-pressed="'+(filter==='deibem')+'">😎 Agora vai! ('+deibemCount+')</button><button class="fchip ko" data-f="lasquei" aria-pressed="'+(filter==='lasquei')+'">😩 Me Lasquei, siô.. ('+lasqueiCount+')</button></div>';
     var list=visibleMatches();
-    if(!list.length){html+='<div class="empty">'+(filter==='abertos'?'Nenhum jogo aberto agora. Veja <b>Todos</b> ou aguarde os próximos.':'Nada por aqui.')+'</div>';root.innerHTML=html;bindFilters();return;}
+    if(!list.length){html+='<div class="empty">'+(filter==='abertos'?'Nenhum jogo aberto agora. Veja <b>Todos</b> ou aguarde os próximos.':filter==='deibem'?'Você ainda não pontuou em nenhum jogo decidido. Bora pro próximo! 🍀':filter==='lasquei'?'Nenhum vacilo até agora — tá voando! 😎':'Nada por aqui.')+'</div>';root.innerHTML=html;bindFilters();return;}
     var lastDay='';
     list.forEach(function(m){
-      var dk=dayKey(m.kickoff);if(filter!=='brasil'&&dk!==lastDay){lastDay=dk;html+='<div class="daylabel">'+esc(dk)+'</div>';}
+      var dk=dayKey(m.kickoff);if((filter==='todos'||filter==='abertos')&&dk!==lastDay){lastDay=dk;html+='<div class="daylabel">'+esc(dk)+'</div>';}
       var li=lockInfo(m),pr=(me.predictions&&me.predictions[m.id])||{h:'',a:''},locked=li.state!=='aberto',hasPred=(pr.h!==''&&pr.h!=null&&pr.a!==''&&pr.a!=null),sc=m.result?scoreForP(pr,m,me&&me.exx===m.id):null,counts=new Date(m.kickoff).getTime()>=SCORE_FROM;
       var st=li.state==='final'?'Encerrado':li.state==='fechado'?'Fechado':'Aberto';
       html+='<div class="match'+(m.weight===2?' br':'')+(me&&me.exx===m.id?' exx':'')+'" data-mid="'+esc(m.id)+'"><div class="row1"><span class="chip">'+esc(m.group)+(m.weight===2?'</span><span class="br-badge">VALE 2×</span>':'</span>')+'<span class="status '+li.state+'">'+st+'</span></div>'+
