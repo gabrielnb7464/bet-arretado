@@ -88,6 +88,7 @@
   /* FILTERS */
   .filters{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px}
   .filters::-webkit-scrollbar{display:none}
+  .subfilters{margin-top:-8px}
   .fchip{flex:none;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
   .fchip[aria-pressed="true"]{background:var(--panel-2);color:var(--txt);border-color:var(--teal)}
   .fchip.br[aria-pressed="true"]{border-color:var(--brz);color:var(--brz)}
@@ -570,7 +571,9 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2Zj
     var deibemCount=scoredMine.filter(function(m){return myPtsOf(m)>0;}).length;
     var lasqueiCount=scoredMine.length-deibemCount;
     var html='<div class="potbar">💸 Buy-in <b>R$'+ENTRY+'</b> · 🏆 winner takes it all<button class="pixmini" id="potPix">📋 Pix</button></div>';
-    html+='<div class="filters" id="filters"><button class="fchip" data-f="abertos" aria-pressed="'+(filter==='abertos')+'">Abertos ('+openCount+')</button><button class="fchip br" data-f="brasil" aria-pressed="'+(filter==='brasil')+'">🇧🇷 Brasil 2×</button><button class="fchip" data-f="todos" aria-pressed="'+(filter==='todos')+'">Todos (72)</button><button class="fchip ok" data-f="deibem" aria-pressed="'+(filter==='deibem')+'">😎 Agora vai! ('+deibemCount+')</button><button class="fchip ko" data-f="lasquei" aria-pressed="'+(filter==='lasquei')+'">😩 Me Lasquei, siô.. ('+lasqueiCount+')</button></div>';
+    var inTodos=(filter==='todos'||filter==='deibem'||filter==='lasquei');
+    html+='<div class="filters" id="filters"><button class="fchip" data-f="abertos" aria-pressed="'+(filter==='abertos')+'">Abertos ('+openCount+')</button><button class="fchip br" data-f="brasil" aria-pressed="'+(filter==='brasil')+'">🇧🇷 Brasil 2×</button><button class="fchip" data-f="todos" aria-pressed="'+inTodos+'">Todos (72)</button></div>';
+    if(inTodos){html+='<div class="filters subfilters" id="subfilters"><button class="fchip" data-f="todos" aria-pressed="'+(filter==='todos')+'">Todos os jogos</button><button class="fchip ok" data-f="deibem" aria-pressed="'+(filter==='deibem')+'">😎 Agora vai! ('+deibemCount+')</button><button class="fchip ko" data-f="lasquei" aria-pressed="'+(filter==='lasquei')+'">😩 Me Lasquei, siô.. ('+lasqueiCount+')</button></div>';}
     var list=visibleMatches();
     if(!list.length){html+='<div class="empty">'+(filter==='abertos'?'Nenhum jogo aberto agora. Veja <b>Todos</b> ou aguarde os próximos.':filter==='deibem'?'Você ainda não pontuou em nenhum jogo decidido. Bora pro próximo! 🍀':filter==='lasquei'?'Nenhum vacilo até agora — tá voando! 😎':'Nada por aqui.')+'</div>';root.innerHTML=html;bindFilters();return;}
     var lastDay='';
@@ -595,7 +598,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2Zj
       ph&&ph.addEventListener('input',dirty);pa&&pa.addEventListener('input',dirty);
       if(cb)cb.addEventListener('click',save);});
   }
-  function bindFilters(){$$('#filters .fchip').forEach(function(b){b.addEventListener('click',function(){filter=b.dataset.f;renderPalpites();});});}
+  function bindFilters(){$$('#filters .fchip, #subfilters .fchip').forEach(function(b){b.addEventListener('click',function(){filter=b.dataset.f;renderPalpites();});});}
 
   /* ---------- ranking ---------- */
   function charFor(idx){if(idx===0)return '<div class="char"><span class="spark s1">✨</span><span class="crown">👑</span><span class="face">🤴</span><span class="spark s2">✨</span></div>';if(idx===1)return '<div class="char"><span class="medal">🥈</span></div>';return '<div class="char"><span class="medal">🥉</span></div>';}
