@@ -90,6 +90,13 @@
   .filters::-webkit-scrollbar{display:none}
   .subfilters{margin-top:-8px}
   .lanterna-name{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+  .score-row{cursor:pointer}
+  .score-row .chev{color:var(--muted);font-size:11px;display:inline-block;transition:transform .2s}
+  .score-row.active{background:rgba(246,192,48,.10)}
+  .score-row.active .chev{transform:rotate(180deg)}
+  .score-exp{margin-top:10px;background:var(--panel-2);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;padding:11px 13px}
+  .se-t{font-weight:800;font-size:14px;margin-bottom:4px}
+  .se-d{font-size:13px;line-height:1.55}
   .fchip{flex:none;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
   .fchip[aria-pressed="true"]{background:var(--panel-2);color:var(--txt);border-color:var(--teal)}
   .fchip.br[aria-pressed="true"]{border-color:var(--brz);color:var(--brz)}
@@ -332,12 +339,14 @@
     <div class="card">
       <h2>Como pontuar</h2>
       <table class="scoretable">
-        <tr><td class="ic">🎯</td><td><b>Placar exato</b></td><td class="pv exato">25</td></tr>
-        <tr><td class="ic">🔵</td><td><b>Vencedor + saldo de gols</b></td><td class="pv">18</td></tr>
-        <tr><td class="ic">✅</td><td><b>Resultado certo</b></td><td class="pv">12</td></tr>
-        <tr><td class="ic">⚽</td><td><b>Gols de uma equipe</b></td><td class="pv">5</td></tr>
-        <tr><td class="ic">—</td><td><b>Errou</b></td><td class="pv" style="color:var(--muted)">0</td></tr>
+        <tr class="score-row" data-exp="exato"><td class="ic">🎯</td><td><b>Placar exato</b> <span class="chev">▾</span></td><td class="pv exato">25</td></tr>
+        <tr class="score-row" data-exp="saldo"><td class="ic">🔵</td><td><b>Vencedor + saldo de gols</b> <span class="chev">▾</span></td><td class="pv">18</td></tr>
+        <tr class="score-row" data-exp="resultado"><td class="ic">✅</td><td><b>Resultado certo</b> <span class="chev">▾</span></td><td class="pv">12</td></tr>
+        <tr class="score-row" data-exp="gols"><td class="ic">⚽</td><td><b>Gols de uma equipe</b> <span class="chev">▾</span></td><td class="pv">5</td></tr>
+        <tr class="score-row" data-exp="errou"><td class="ic">—</td><td><b>Errou</b> <span class="chev">▾</span></td><td class="pv" style="color:var(--muted)">0</td></tr>
       </table>
+      <div id="scoreExp" class="score-exp" hidden></div>
+      <p class="lead" style="margin:8px 0 0;font-size:13px;color:var(--muted)">👆 Toque em cada tipo pra ver explicação e exemplo.</p>
       <p class="lead" style="margin:10px 0 0">Vale o nível mais alto (não acumula). <b>A pontuação conta a partir dos jogos de 24/06.</b></p>
     </div>
     <div class="card">
@@ -617,6 +626,26 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
       if(cb)cb.addEventListener('click',save);});
   }
   function bindFilters(){$$('#filters .fchip, #subfilters .fchip').forEach(function(b){b.addEventListener('click',function(){filter=b.dataset.f;renderPalpites();});});}
+  var SCORE_EXP={
+    exato:{t:'🎯 Placar exato — 25 pts',d:'Você cravou o placar idêntico. Ex.: deu <b>2×1</b> e você palpitou <b>2×1</b>. Em jogo do Brasil vira <b>50</b> (×2); com Exxtourado, até 100.'},
+    saldo:{t:'🔵 Vencedor + saldo de gols — 18 pts',d:'<b>Saldo</b> é a diferença de gols do jogo. Aqui você acerta <b>quem ganha E por quantos gols de diferença</b>, sem cravar o placar. Ex.: deu <b>3×0</b> (saldo 3) e você pôs <b>4×1</b> (saldo 3 também) → <b>18</b>.'},
+    resultado:{t:'✅ Resultado certo — 12 pts',d:'Acertou só <b>quem ganhou</b> (ou que foi empate), mas com saldo diferente. Ex.: deu <b>3×0</b> e você pôs <b>1×0</b> (ganhou certo, diferença errada) → <b>12</b>.'},
+    gols:{t:'⚽ Gols de uma equipe — 5 pts',d:'Errou o vencedor, mas acertou <b>quantos gols um dos times fez</b>. Ex.: deu <b>2×1</b> e você pôs <b>0×1</b> (acertou o 1 do visitante) → <b>5</b>.'},
+    errou:{t:'❌ Errou — 0 pts',d:'Não acertou nem o vencedor, nem o saldo, nem os gols de nenhum time. Ex.: deu <b>2×1</b> e você pôs <b>0×3</b> → <b>0</b>.'}
+  };
+  var scoreExpCur=null;
+  function bindScoreExp(){
+    var rows=$$('#regras .score-row');if(!rows.length)return;
+    rows.forEach(function(row){
+      row.onclick=function(){
+        var k=row.dataset.exp,panel=$('#scoreExp');if(!panel)return;
+        rows.forEach(function(r){r.classList.remove('active');});
+        if(scoreExpCur===k){scoreExpCur=null;panel.hidden=true;panel.innerHTML='';return;}
+        scoreExpCur=k;row.classList.add('active');
+        var e=SCORE_EXP[k];panel.innerHTML='<div class="se-t">'+e.t+'</div><div class="se-d">'+e.d+'</div>';panel.hidden=false;
+      };
+    });
+  }
 
   /* ---------- ranking ---------- */
   function charFor(idx){if(idx===0)return '<div class="char"><span class="spark s1">✨</span><span class="crown">👑</span><span class="face">🤴</span><span class="spark s2">✨</span></div>';if(idx===1)return '<div class="char"><span class="medal">🥈</span></div>';return '<div class="char"><span class="medal">🥉</span></div>';}
@@ -711,7 +740,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   async function toggleReaction(matchId,predId,emoji){ if(!me)return; if(fb){var ref=fb.db.ref('bolao/reactions/'+matchId+'/'+predId+'/'+emoji+'/'+me.id);var cur=(await ref.once('value')).val();if(cur)await ref.remove();else await ref.set(true);} else {var o=await getObj('bolao_reactions',true)||{};o[matchId]=o[matchId]||{};o[matchId][predId]=o[matchId][predId]||{};o[matchId][predId][emoji]=o[matchId][predId][emoji]||{};if(o[matchId][predId][emoji][me.id])delete o[matchId][predId][emoji][me.id];else o[matchId][predId][emoji][me.id]=true;await setObj('bolao_reactions',o,true);} }
   function closePreds(){var pm=$('#predModal');if(pm)pm.classList.remove('on');}
   async function openPreds(mid){ var m=cfg.matches.filter(function(x){return x.id===mid;})[0]; if(!m)return; var sheet=$('#predSheet'); $('#predModal').classList.add('on'); sheet.innerHTML='<button class="closex" id="predClose">✕</button><h3>Palpites · '+esc(m.a.abbr)+' × '+esc(m.b.abbr)+'</h3><div class="sub2">Carregando…</div>'; var reacts=await loadReactions(mid); var subs=players.filter(function(p){return p.predictions&&p.predictions[mid]&&p.predictions[mid].h!=null;}); var body='<button class="closex" id="predClose">✕</button><h3>Palpites · '+esc(m.a.abbr)+' × '+esc(m.b.abbr)+'</h3><div class="sub2">'+(m.result?'Oficial '+m.result.h+'×'+m.result.a+' · ':'')+subs.length+' palpite(s) · reaja! 😋</div>'; if(!subs.length){body+='<div class="empty">Ninguém palpitou neste jogo.</div>';} subs.sort(function(a,b){return a.name.localeCompare(b.name,'pt');}).forEach(function(p){var pr=p.predictions[mid];body+='<div class="pcard"><div class="ptop"><span class="pwho">'+esc(p.name)+'</span><span class="pscore">'+pr.h+' × '+pr.a+'</span></div><div class="reacts">'+REACT_EMOJIS.map(function(em){var users=(reacts[p.id]&&reacts[p.id][em])||{};var n=Object.keys(users).length;var mine=(me&&users[me.id])?' mine':'';return '<button class="react'+mine+'" data-pid="'+esc(p.id)+'" data-em="'+em+'">'+em+(n>0?'<span class="rc">'+n+'</span>':'')+'</button>';}).join('')+'</div></div>';}); sheet.innerHTML=body; $('#predClose').addEventListener('click',closePreds); $$('.react',sheet).forEach(function(b){b.addEventListener('click',async function(){await toggleReaction(mid,b.dataset.pid,b.dataset.em);openPreds(mid);});}); }
-  function switchView(name){if(!me){showRegister();return;}$('#register').style.display='none';$$('.view').forEach(function(v){v.classList.toggle('on',v.id===name);});$$('#nav button').forEach(function(b){b.setAttribute('aria-selected',b.dataset.view===name?'true':'false');});window.scrollTo(0,0);if(name==='palpites')renderPalpites();else if(name==='ranking'){renderRanking();if(me&&lanternaId()===me.id)playSound(LANTERNA_SOUND);}else if(name==='galo')renderGalo();else if(name==='resultados')renderResultados();}
+  function switchView(name){if(!me){showRegister();return;}$('#register').style.display='none';$$('.view').forEach(function(v){v.classList.toggle('on',v.id===name);});$$('#nav button').forEach(function(b){b.setAttribute('aria-selected',b.dataset.view===name?'true':'false');});window.scrollTo(0,0);if(name==='palpites')renderPalpites();else if(name==='ranking'){renderRanking();if(me&&lanternaId()===me.id)playSound(LANTERNA_SOUND);}else if(name==='galo')renderGalo();else if(name==='resultados')renderResultados();else if(name==='regras')bindScoreExp();}
   $('#nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(!me){showRegister();return;}switchView(b.dataset.view);});
   setInterval(function(){if(!me)return;resolveDuels();if($('#palpites').classList.contains('on')){var ae=document.activeElement;if(!(ae&&ae.classList&&(ae.classList.contains('ph')||ae.classList.contains('pa'))))renderPalpites();}else if($('#galo').classList.contains('on'))renderGalo();},30000);
 
