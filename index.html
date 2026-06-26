@@ -72,12 +72,11 @@
   .sub{color:var(--muted);font-size:11px;margin-top:3px}
   .live{display:inline-flex;align-items:center;gap:4px}.live i{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.6s infinite}
   @keyframes pulse{50%{opacity:.3}}
-  .me-chip{margin-left:auto;display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 8px 6px 13px;font-size:12.5px}
+  .gear-btn{margin-left:auto;flex:none;background:var(--panel);border:1px solid var(--line);color:var(--muted);width:38px;height:38px;border-radius:50%;font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit}
+  .gear-btn:active{transform:scale(.94)}
+  .me-chip{display:flex;align-items:center;gap:7px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 8px 6px 13px;font-size:12.5px}
   .me-chip .who{font-weight:600;max-width:96px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .me-chip button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:2px 4px;line-height:1}
-  .potbar{display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,rgba(246,192,38,.16),rgba(226,80,58,.13));border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:12.5px;margin-bottom:11px}
-  .potbar b{color:var(--gold)}
-  .pixmini{margin-left:auto;background:var(--panel-2);border:1px solid var(--line);color:var(--txt);border-radius:999px;padding:6px 11px;font-size:11.5px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap}
 
   /* PIX box */
   .pixbox{background:linear-gradient(160deg,rgba(52,211,153,.14),rgba(34,211,238,.08));border:1.5px solid rgba(52,211,153,.4);border-radius:14px;padding:13px 14px;margin-bottom:15px}
@@ -314,6 +313,7 @@
   <header class="top">
     <div class="crest bagre"></div>
     <div><h1><span class="a">Bet</span> <span class="b">Arretado</span></h1><div class="sub" id="hsub">Copa 2026 · o bolão mais arretado</div></div>
+    <button class="gear-btn" id="gearBtn" title="Resultados" aria-label="Resultados">⚙️</button>
     <div class="me-chip" id="meChip" style="display:none"><span class="who" id="meName"></span><button id="logout" title="Trocar participante">⇄</button></div>
   </header>
 
@@ -413,7 +413,6 @@
     <button role="tab" data-view="palpites" aria-selected="true"><span class="ic">⚽</span>Palpites</button>
     <button role="tab" data-view="ranking" aria-selected="false"><span class="ic">🏆</span>Ranking</button>
     <button role="tab" data-view="galo" aria-selected="false"><span class="ic galo2"><span class="flip">🐓</span>🐓</span><span class="galolbl">Galo de Rinha</span></button>
-    <button role="tab" data-view="resultados" aria-selected="false"><span class="ic">🛠️</span>Resultados</button>
     <button role="tab" data-view="regras" aria-selected="false"><span class="ic">📋</span>Regras</button>
   </nav>
 </div>
@@ -632,7 +631,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
     var scoredMine=cfg.matches.filter(function(m){return myPtsOf(m)!=null;});
     var deibemCount=scoredMine.filter(function(m){return myPtsOf(m)>0;}).length;
     var lasqueiCount=scoredMine.length-deibemCount;
-    var html='<div class="potbar">💸 Buy-in <b>R$'+ENTRY+'</b> · 🏆 winner takes it all<button class="pixmini" id="potPix">📋 Pix</button></div>';
+    var html='';
     var inTodos=(filter==='todos'||filter==='deibem'||filter==='lasquei');
     html+='<div class="filters" id="filters"><button class="fchip" data-f="abertos" aria-pressed="'+(filter==='abertos')+'">Abertos ('+openCount+')</button><button class="fchip live-chip" data-f="andamento" aria-pressed="'+(filter==='andamento')+'">🔴 Em andamento ('+liveCount+')</button><button class="fchip br" data-f="brasil" aria-pressed="'+(filter==='brasil')+'">🇧🇷 Brasil 2×</button><button class="fchip" data-f="todos" aria-pressed="'+inTodos+'">Todos (72)</button></div>';
     if(inTodos){html+='<div class="filters subfilters" id="subfilters"><button class="fchip" data-f="todos" aria-pressed="'+(filter==='todos')+'">Todos os jogos</button><button class="fchip ok" data-f="deibem" aria-pressed="'+(filter==='deibem')+'">😎 Agora vai! ('+deibemCount+')</button><button class="fchip ko" data-f="lasquei" aria-pressed="'+(filter==='lasquei')+'">😩 Me Lasquei, siô.. ('+lasqueiCount+')</button></div>';}
@@ -651,7 +650,6 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
         (m.result?'<span class="result-line"><span class="official'+(live?' partial':'')+'">'+(live?'Parcial ':'Oficial ')+m.result.h+'×'+m.result.a+'</span>'+(counts?'<span class="pts '+(sc.exact?'exato':sc.pts>0?'win':'zero')+'">'+(sc.pts>0?'+':'')+sc.pts+(live?' parc.':'')+'</span>':'<span class="pts zero">histórico</span>')+'</span>':live?'<span class="result-line"><span class="official partial">⏳ aguardando placar ao vivo</span></span>':'<button class="confirmbtn'+(hasPred?' done':'')+'" data-confirm="'+esc(m.id)+'"'+(locked?' disabled':'')+'>'+(hasPred?'Confirmado ✓':'Confirmar palpite')+'</button><span class="saved" data-save="'+esc(m.id)+'">salvo ✓</span>')+'</div>'+(Date.now()>=new Date(m.kickoff).getTime()?'<button class="predbtn" data-preds="'+esc(m.id)+'">👀 Ver palpites de todos</button>':'')+exxCtl(m)+'</div>';
     });
     root.innerHTML=html;bindFilters();
-    var pp=$('#potPix');if(pp)pp.addEventListener('click',function(){copyText(POOL_PIX_COPY);});
     $$('#palpites .predbtn').forEach(function(b){b.addEventListener('click',function(){openPreds(b.dataset.preds);});});
     $$('#palpites .exxbtn').forEach(function(b){b.addEventListener('click',function(){toggleExx(b.dataset.exx);});});
     $$('#palpites .match').forEach(function(card){var mid=card.dataset.mid,m=cfg.matches.filter(function(x){return x.id===mid;})[0],ph=$('.ph',card),pa=$('.pa',card),cb=$('.confirmbtn[data-confirm="'+mid+'"]',card);
@@ -780,6 +778,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   async function openPreds(mid){ var m=cfg.matches.filter(function(x){return x.id===mid;})[0]; if(!m)return; var sheet=$('#predSheet'); $('#predModal').classList.add('on'); sheet.innerHTML='<button class="closex" id="predClose">✕</button><h3>Palpites · '+esc(m.a.abbr)+' × '+esc(m.b.abbr)+'</h3><div class="sub2">Carregando…</div>'; var reacts=await loadReactions(mid); var subs=players.filter(function(p){return p.predictions&&p.predictions[mid]&&p.predictions[mid].h!=null;}); var body='<button class="closex" id="predClose">✕</button><h3>Palpites · '+esc(m.a.abbr)+' × '+esc(m.b.abbr)+'</h3><div class="sub2">'+(m.result?'Oficial '+m.result.h+'×'+m.result.a+' · ':'')+subs.length+' palpite(s) · reaja! 😋</div>'; if(!subs.length){body+='<div class="empty">Ninguém palpitou neste jogo.</div>';} subs.sort(function(a,b){return a.name.localeCompare(b.name,'pt');}).forEach(function(p){var pr=p.predictions[mid];body+='<div class="pcard"><div class="ptop"><span class="pwho">'+esc(p.name)+'</span><span class="pscore">'+pr.h+' × '+pr.a+'</span></div><div class="reacts">'+REACT_EMOJIS.map(function(em){var users=(reacts[p.id]&&reacts[p.id][em])||{};var n=Object.keys(users).length;var mine=(me&&users[me.id])?' mine':'';return '<button class="react'+mine+'" data-pid="'+esc(p.id)+'" data-em="'+em+'">'+em+(n>0?'<span class="rc">'+n+'</span>':'')+'</button>';}).join('')+'</div></div>';}); sheet.innerHTML=body; $('#predClose').addEventListener('click',closePreds); $$('.react',sheet).forEach(function(b){b.addEventListener('click',async function(){await toggleReaction(mid,b.dataset.pid,b.dataset.em);openPreds(mid);});}); }
   function switchView(name){if(!me){showRegister();return;}$('#register').style.display='none';$$('.view').forEach(function(v){v.classList.toggle('on',v.id===name);});$$('#nav button').forEach(function(b){b.setAttribute('aria-selected',b.dataset.view===name?'true':'false');});window.scrollTo(0,0);if(name==='palpites')renderPalpites();else if(name==='ranking'){renderRanking();if(me&&lanternaId()===me.id)playSnd(AUDIO.lant);}else if(name==='galo')renderGalo();else if(name==='resultados')renderResultados();else if(name==='regras')bindScoreExp();}
   $('#nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;if(!me){showRegister();return;}switchView(b.dataset.view);});
+  $('#gearBtn').addEventListener('click',function(){if(!me){showRegister();return;}switchView('resultados');});
   setInterval(function(){if(!me)return;resolveDuels();if($('#palpites').classList.contains('on')){var ae=document.activeElement;if(!(ae&&ae.classList&&(ae.classList.contains('ph')||ae.classList.contains('pa'))))renderPalpites();}else if($('#galo').classList.contains('on'))renderGalo();},30000);
 
   startIntro();
