@@ -284,6 +284,25 @@
   .rankpop .rp-x{margin-left:auto;align-self:flex-start;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1}
   :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
   @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important}}
+  /* ---- Tarefa do Cangaceiro / streak / selos / abas ---- */
+  .mission{display:flex;align-items:center;gap:11px;margin:0 0 10px;padding:11px 13px;border-radius:13px;background:linear-gradient(135deg,#2a1d05,#1a1330);border:1px solid var(--gold);box-shadow:0 12px 26px -20px rgba(246,192,38,.85)}
+  .mission .m-ic{font-size:22px;line-height:1;flex:none}
+  .mission .m-bd{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .mission .m-bd>b{font-size:13.5px;color:var(--gold);font-family:'Oswald';letter-spacing:.3px}
+  .mission .m-bd span{font-size:12px;color:var(--txt)}
+  .mission .m-bd span b{color:#ffe9a8}
+  .mission .m-pg{margin-left:auto;flex:none;font-family:'Oswald';font-weight:700;font-size:14px;color:var(--gold);background:rgba(246,192,38,.12);border:1px solid var(--gold);border-radius:999px;padding:3px 11px}
+  .mission.done{border-color:var(--green);box-shadow:0 12px 26px -20px rgba(52,211,153,.75)}
+  .mission.done .m-bd>b{color:var(--green)}
+  .mission.soon{border-color:var(--line);background:var(--panel);box-shadow:none}
+  .mission.soon .m-bd>b{color:var(--muted)}
+  .streak{margin:0 0 12px;font-size:12px;color:var(--muted);text-align:center}
+  .streak b{color:var(--gold)}
+  .streak .s-fl{filter:drop-shadow(0 0 5px rgba(246,192,38,.6))}
+  .streak.dim{opacity:.85}
+  .badges{display:inline-flex;gap:2px;vertical-align:middle;margin-left:4px}
+  .badges .bdg{font-size:12.5px;cursor:default;filter:drop-shadow(0 1px 1px rgba(0,0,0,.55))}
+  .rank-tabs{margin:-2px 0 14px}
 </style>
 </head>
 <body>
@@ -540,7 +559,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   function flagImg(ab){var c=ISO[ab];return c?'<img class="flagimg" src="https://flagcdn.com/w40/'+c+'.png" alt="'+esc(ab)+'" loading="lazy">':'';}
   function buildMatches(){return FIX.map(function(f,i){var g=f[0],h=f[1],a=f[2],ko=f[3],res=f[4],br=(h==='BRA'||a==='BRA');return {id:'g'+i,group:'Grupo '+g,kickoff:ko,weight:br?2:1,a:{name:TEAMS[h].n,abbr:h,flag:TEAMS[h].f},b:{name:TEAMS[a].n,abbr:a,flag:TEAMS[a].f},result:res?{h:res[0],a:res[1]}:null};});}
 
-  var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming',myLastPos=null,duels=[],galoArenaFilter='all';
+  var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming',myLastPos=null,duels=[],galoArenaFilter='all',rankView='geral';
   var $=function(s,r){return (r||document).querySelector(s);},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
@@ -554,7 +573,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   function scoreBase(p,res){if(!p||!res||p.h==null||p.a==null)return {pts:0,exact:false,outcome:false,saldo:false};var ph=+p.h,pa=+p.a,ah=+res.h,aa=+res.a;if(ph===ah&&pa===aa)return {pts:25,exact:true,outcome:true,saldo:true};var ps=Math.sign(ph-pa),as=Math.sign(ah-aa);if(ps===as){if(as!==0&&(ph-pa)===(ah-aa))return {pts:18,exact:false,outcome:true,saldo:true};return {pts:12,exact:false,outcome:true,saldo:as===0};}if(ph===ah||pa===aa)return {pts:5,exact:false,outcome:false,saldo:false};return {pts:0,exact:false,outcome:false,saldo:false};}
   function scoreForP(p,m,exx){var s=scoreBase(p,m.result);s.pts*=(m.weight||1);if(exx)s.pts*=2;return s;}
   function scoreFor(p,m){return scoreForP(p,m,false);}
-  function statsFor(p){var base=0,exact=0,outc=0,saldo=0,diff=0;cfg.matches.forEach(function(m){if(!m.result)return;if(new Date(m.kickoff).getTime()<SCORE_FROM)return;var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null){diff+=8;return;}var s=scoreForP(pr,m,inExx(p,m.id));base+=s.pts;if(s.exact)exact++;if(s.outcome)outc++;if(s.saldo)saldo++;diff+=Math.abs(pr.h-m.result.h)+Math.abs(pr.a-m.result.a);});var dj=duelAdj(p.id);return {pts:base+dj,base:base,duel:dj,exact:exact,outc:outc,saldo:saldo,diff:diff};}
+  function statsFor(p){var base=0,exact=0,outc=0,saldo=0,diff=0;cfg.matches.forEach(function(m){if(!m.result)return;if(new Date(m.kickoff).getTime()<SCORE_FROM)return;var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null){diff+=8;return;}var s=scoreForP(pr,m,inExx(p,m.id));base+=s.pts;if(s.exact)exact++;if(s.outcome)outc++;if(s.saldo)saldo++;diff+=Math.abs(pr.h-m.result.h)+Math.abs(pr.a-m.result.a);});var dj=duelAdj(p.id),mb=missionBonus(p);return {pts:base+dj+mb,base:base,duel:dj,mission:mb,exact:exact,outc:outc,saldo:saldo,diff:diff};}
   function ranked(){return players.map(function(p){return {p:p,st:statsFor(p)};}).sort(function(A,B){var a=A.st,b=B.st;return b.pts-a.pts||b.exact-a.exact||b.outc-a.outc||b.saldo-a.saldo||a.diff-b.diff||A.p.name.localeCompare(B.p.name,'pt');});}
   function matchById(id){return cfg&&cfg.matches?cfg.matches.filter(function(x){return x.id===id;})[0]:null;}
   function isKO(m){return !!(m&&m.id&&m.id.indexOf('m_')===0);}
@@ -628,6 +647,50 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   function brazilLose(m,hv,av){if(hv==null||av==null)return false;var braHome=m.a.abbr==='BRA',braAway=m.b.abbr==='BRA';if(!braHome&&!braAway)return false;var bra=braHome?hv:av,opp=braHome?av:hv;return bra<opp;}
   function lanternaId(){var rk=ranked();return rk.length>=2?rk[rk.length-1].p.id:null;}
   function playSound(u){try{var a=new Audio(u);a.volume=.9;a.play().catch(function(){});}catch(e){}}
+  /* ---------- Tarefa do Cangaceiro (missao do dia) ---------- */
+  var MISSIONS={
+    '2026-06-27':{icon:'\ud83e\udd20',title:'Tarefa do Cangaceiro',desc:'Crave <b>1 placar</b> de hoje e leve <b>+5</b> de b\u00f4nus no ranking',need:1,bonus:5}
+  };
+  function spDate(iso){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(iso));}catch(e){return '';}}
+  function todaySP(){return spDate(Date.now());}
+  function missionMatchesOn(d){return (cfg&&cfg.matches?cfg.matches:[]).filter(function(m){return spDate(m.kickoff)===d;});}
+  function missionProgress(p,d){var ms=MISSIONS[d];if(!ms||!p)return {n:0,need:1,done:false};var n=0;missionMatchesOn(d).forEach(function(m){var pr=p.predictions&&p.predictions[m.id];if(pr&&pr.h!=null&&pr.a!=null&&pr.h!==''&&pr.a!=='')n++;});var need=ms.need||1;return {n:n,need:need,done:n>=need};}
+  function missionBonus(p){if(!p)return 0;var t=0,today=todaySP();for(var d in MISSIONS){if(d>today)continue;if(missionProgress(p,d).done)t+=(MISSIONS[d].bonus||0);}return t;}
+  function missionCardHtml(){var today=todaySP(),ms=MISSIONS[today];
+    if(ms){var pg=missionProgress(me,today);
+      if(pg.done)return '<div class="mission done"><span class="m-ic">\u2705</span><div class="m-bd"><b>'+ms.icon+' '+ms.title+'</b><span>Miss\u00e3o cumprida! <b>+'+ms.bonus+'</b> garantidos no ranking. Arretado! \ud83e\udd20</span></div></div>';
+      return '<div class="mission"><span class="m-ic">'+ms.icon+'</span><div class="m-bd"><b>'+ms.title+'</b><span>'+ms.desc+'</span></div><span class="m-pg">'+pg.n+'/'+pg.need+'</span></div>';}
+    var fut=Object.keys(MISSIONS).filter(function(d){return d>today;});
+    if(fut.length)return '<div class="mission soon"><span class="m-ic">\ud83e\udd20</span><div class="m-bd"><b>Tarefa do Cangaceiro</b><span>Estreia <b>amanh\u00e3</b>: crave os placares do dia e leve b\u00f4nus no ranking!</span></div></div>';
+    return '';}
+  function streakChipHtml(){if(!me)return '';var ex=statsFor(me).exact;
+    if(ex<=0)return '<div class="streak dim"><span class="s-fl">\ud83d\udd25</span> Crave seu <b>primeiro placar exato</b> e comece sua sequ\u00eancia</div>';
+    return '<div class="streak"><span class="s-fl">\ud83d\udd25</span> Sua sequ\u00eancia de cravadas: <b>'+ex+'</b> placar'+(ex===1?'':'es')+' exato'+(ex===1?'':'s')+'</div>';}
+  /* ---------- selos com sotaque (badges) ---------- */
+  function badgeData(){var ms=(cfg&&cfg.matches?cfg.matches:[]).filter(function(m){return m.result&&new Date(m.kickoff).getTime()>=SCORE_FROM;}).sort(function(a,b){return new Date(a.kickoff)-new Date(b.kickoff);});
+    var winsBy={},exactBy={},zerosBy={},streakBy={},maxWins=0,maxZeros=0;
+    duels.forEach(function(d){if(d.status==='done'&&d.winner&&d.winner!=='tie')winsBy[d.winner]=(winsBy[d.winner]||0)+1;});
+    players.forEach(function(p){var run=0,best=0,zeros=0,exact=0;
+      ms.forEach(function(m){var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null||pr.h===''||pr.a===''){run=0;return;}var b=scoreBase(pr,m.result),sc=scoreForP(pr,m,inExx(p,m.id));if(b.outcome){run++;if(run>best)best=run;}else run=0;if(sc.pts===0)zeros++;if(b.exact)exact++;});
+      exactBy[p.id]=exact;zerosBy[p.id]=zeros;streakBy[p.id]=best;if(zeros>maxZeros)maxZeros=zeros;});
+    Object.keys(winsBy).forEach(function(k){if(winsBy[k]>maxWins)maxWins=winsBy[k];});
+    return {winsBy:winsBy,exactBy:exactBy,zerosBy:zerosBy,streakBy:streakBy,maxWins:maxWins,maxZeros:maxZeros};}
+  function badgesFor(p,bd){var out=[];
+    if((bd.exactBy[p.id]||0)>=3)out.push({i:'\ud83c\udfaf',l:'Cabra Cravador'});
+    if((bd.streakBy[p.id]||0)>=3)out.push({i:'\ud83d\udd25',l:'Pegou Fogo'});
+    if(bd.maxWins>=1&&(bd.winsBy[p.id]||0)===bd.maxWins)out.push({i:'\ud83d\udc13',l:'Rei da Rinha'});
+    if(bd.maxZeros>=3&&(bd.zerosBy[p.id]||0)===bd.maxZeros)out.push({i:'\ud83d\udca5',l:'Zica'});
+    return out;}
+  function badgesHtml(p,bd){var b=badgesFor(p,bd);if(!b.length)return '';return '<span class="badges">'+b.map(function(x){return '<span class="bdg" title="'+x.l+'">'+x.i+'</span>';}).join('')+'</span>';}
+  /* ---------- recortes do ranking (geral / hoje / semana) ---------- */
+  function statsScoped(p,test){var base=0,exact=0,outc=0,saldo=0,diff=0;
+    cfg.matches.forEach(function(m){if(!m.result)return;if(new Date(m.kickoff).getTime()<SCORE_FROM)return;if(!test(m))return;var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null||pr.h===''||pr.a==='')return;var sc=scoreForP(pr,m,inExx(p,m.id));base+=sc.pts;if(sc.exact)exact++;if(sc.outcome)outc++;if(sc.saldo)saldo++;diff+=Math.abs(pr.h-m.result.h)+Math.abs(pr.a-m.result.a);});
+    return {pts:base,base:base,exact:exact,outc:outc,saldo:saldo,diff:diff,duel:0};}
+  function rankedBy(stf){return players.map(function(p){return {p:p,st:stf(p)};}).sort(function(A,B){var a=A.st,b=B.st;return b.pts-a.pts||b.exact-a.exact||b.outc-a.outc||b.saldo-a.saldo||a.diff-b.diff||A.p.name.localeCompare(B.p.name,'pt');});}
+  function rankedView(v){if(v==='hoje'){var d=todaySP();return rankedBy(function(p){return statsScoped(p,function(m){return spDate(m.kickoff)===d;});});}if(v==='semana'){var wk=Date.now()-7*86400000;return rankedBy(function(p){return statsScoped(p,function(m){return new Date(m.kickoff).getTime()>=wk;});});}return ranked();}
+  function viewHasResults(v){if(v==='geral')return true;var d=todaySP(),wk=Date.now()-7*86400000;return cfg.matches.some(function(m){if(!m.result||new Date(m.kickoff).getTime()<SCORE_FROM)return false;return v==='hoje'?spDate(m.kickoff)===d:new Date(m.kickoff).getTime()>=wk;});}
+  function rankTabsHtml(v){var t=[['geral','Geral'],['hoje','Rodada de hoje'],['semana','Semana']];return '<div class="filters rank-tabs" id="ranktabs">'+t.map(function(x){return '<button class="fchip" data-rv="'+x[0]+'" aria-pressed="'+(v===x[0])+'">'+x[1]+'</button>';}).join('')+'</div>';}
+  function bindRankTabs(){$$('#ranktabs .fchip').forEach(function(b){b.addEventListener('click',function(){rankView=b.dataset.rv;renderRanking();});});}
   function renderPalpites(){
     var root=$('#palpites');
     var openCount=cfg.matches.filter(function(m){return lockInfo(m).state==='aberto';}).length;
@@ -635,7 +698,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
     var scoredMine=cfg.matches.filter(function(m){return myPtsOf(m)!=null;});
     var deibemCount=scoredMine.filter(function(m){return myPtsOf(m)>0;}).length;
     var lasqueiCount=scoredMine.length-deibemCount;
-    var html='';
+    var html='';html+=missionCardHtml();html+=streakChipHtml();
     var exxC=exxCredits(me),exxU=exxIds(me).length,exxFree=Math.max(0,exxC-exxU);
     if(exxC>0){html+='<div class="exxbadge">🔥 Você tem <b>'+exxC+'</b> Exxtourado'+(exxC>1?'s':'')+' · <b>'+exxFree+'</b> livre'+(exxFree===1?'':'s')+(exxFree>0?' pra usar':' (todos em uso)')+'</div>';}
     else{html+='<div class="exxbadge dim">🔥 Crave <b>2 placares exatos</b> e ganhe <b>1 Exxtourado</b> (faz um jogo valer ×2)</div>';}
@@ -726,17 +789,17 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   function renderRanking(){
     var root=$('#ranking');
     if(!players.length){root.innerHTML='<div class="rank-head">🏆 <b>O vencedor papa tudo!</b> · R$'+ENTRY+'/pessoa</div><div class="empty">Ninguém entrou ainda. Seja o primeiro!</div>';return;}
-    var rk=ranked(),anyResult=cfg.matches.some(function(m){return m.result;}),html='';
-    html+='<div class="rank-head">🏆 <b>O vencedor papa tudo!</b> · R$'+ENTRY+'/pessoa · quer ficar estribado com R$'+(players.length*ENTRY)+'?</div>';html+=notifCtaHtml();
+    var rView=rankView||'geral';var rk=rankedView(rView),bd=badgeData(),anyResult=cfg.matches.some(function(m){return m.result;}),html='';
+    html+='<div class="rank-head">🏆 <b>O vencedor papa tudo!</b> · R$'+ENTRY+'/pessoa · quer ficar estribado com R$'+(players.length*ENTRY)+'?</div>';html+=notifCtaHtml();html+=rankTabsHtml(rView);if(!viewHasResults(rView)){html+='<div class="empty" style="padding:20px">'+(rView==='hoje'?'Nenhum jogo encerrado hoje ainda — volta na hora dos jogos! ⏰':'Nenhum jogo encerrado nos últimos 7 dias.')+'</div>';root.innerHTML=html;bindRankTabs();return;}
     var top=rk.slice(0,3);
-    if(top.length){var order=[1,0,2];html+='<div class="podium">';order.forEach(function(idx){var r=top[idx];if(!r){html+='<div></div>';return;}var nm=esc(r.p.name.split(' ')[0]);html+='<div class="pod'+(idx===0?' first':'')+'">'+charFor(idx)+'<div class="pname">'+(idx===0?'<span class="fire"><span class="flame">🔥</span> '+nm+' <span class="flame">🔥</span></span>':nm)+'</div><div class="ppts">'+r.st.pts+'</div></div>';});html+='</div>';}
+    if(top.length){var order=[1,0,2];html+='<div class="podium">';order.forEach(function(idx){var r=top[idx];if(!r){html+='<div></div>';return;}var nm=esc(r.p.name.split(' ')[0]);html+='<div class="pod'+(idx===0?' first':'')+'">'+charFor(idx)+'<div class="pname">'+(idx===0?'<span class="fire"><span class="flame">🔥</span> '+nm+' <span class="flame">🔥</span></span>':nm)+badgesHtml(r.p,bd)+'</div><div class="ppts">'+r.st.pts+'</div></div>';});html+='</div>';}
     html+='<table class="rank"><thead><tr><th>#</th><th>Participante</th><th>Pts</th><th title="Placares exatos">🎯</th><th title="Resultados certos">✅</th></tr></thead><tbody>';
-    rk.forEach(function(r,i){var mine=me&&r.p.id===me.id,last=(i===rk.length-1&&rk.length>3);var isLant=(i===rk.length-1&&rk.length>=2);var nm=esc(r.p.name);var nameHtml=i===0?'<span class="fire">'+nm+'</span>':(isLant?'<span class="lanterna-name" data-lant="'+esc(r.p.id)+'">'+nm+'</span>':nm);html+='<tr class="'+(mine?'me-row ':'')+(last?'last-row':'')+'"><td class="pos">'+(i+1)+(last?' 🔦':'')+'</td><td>'+nameHtml+(r.st.duel?' <span class="duelbadge">⚔️'+(r.st.duel>0?'+':'')+r.st.duel+'</span>':'')+'</td><td class="tp">'+r.st.pts+'</td><td>'+r.st.exact+'</td><td>'+r.st.outc+'</td></tr>';});
+    rk.forEach(function(r,i){var mine=me&&r.p.id===me.id,last=(i===rk.length-1&&rk.length>3);var isLant=(i===rk.length-1&&rk.length>=2);var nm=esc(r.p.name);var nameHtml=i===0?'<span class="fire">'+nm+'</span>':(isLant?'<span class="lanterna-name" data-lant="'+esc(r.p.id)+'">'+nm+'</span>':nm);html+='<tr class="'+(mine?'me-row ':'')+(last?'last-row':'')+'"><td class="pos">'+(i+1)+(last?' 🔦':'')+'</td><td>'+nameHtml+badgesHtml(r.p,bd)+(r.st.duel?' <span class="duelbadge">⚔️'+(r.st.duel>0?'+':'')+r.st.duel+'</span>':'')+'</td><td class="tp">'+r.st.pts+'</td><td>'+r.st.exact+'</td><td>'+r.st.outc+'</td></tr>';});
     html+='</tbody></table>';
-    if(rk.length>3){var lastP=rk[rk.length-1];html+='<div class="icu"><div class="cap">💀 Cabra Abestado</div><div class="icu-scene"><div class="monitor"><svg viewBox="0 0 62 42" preserveAspectRatio="none"><polyline class="ekg" points="0,21 12,21 16,21 19,7 23,35 27,21 40,21 44,14 48,28 52,21 62,21"/></svg><span class="beep"></span></div></div><div class="who-last">O cabra mais abestado: <b class="lanterna-name" data-lant="'+esc(lastP.p.id)+'">'+esc(lastP.p.name.split(' ')[0])+'</b> 💀</div></div>';}
+    if(rView==='geral'&&rk.length>3){var lastP=rk[rk.length-1];html+='<div class="icu"><div class="cap">💀 Cabra Abestado</div><div class="icu-scene"><div class="monitor"><svg viewBox="0 0 62 42" preserveAspectRatio="none"><polyline class="ekg" points="0,21 12,21 16,21 19,7 23,35 27,21 40,21 44,14 48,28 52,21 62,21"/></svg><span class="beep"></span></div></div><div class="who-last">O cabra mais abestado: <b class="lanterna-name" data-lant="'+esc(lastP.p.id)+'">'+esc(lastP.p.name.split(' ')[0])+'</b> 💀</div></div>';}
     if(!anyResult)html+='<div class="empty" style="padding:16px">Os pontos aparecem quando os resultados forem registrados.</div>';
     root.innerHTML=html;
-    var nb=$('#notifBtn');if(nb)nb.addEventListener('click',requestNotif);
+    bindRankTabs();var nb=$('#notifBtn');if(nb)nb.addEventListener('click',requestNotif);
     $$('.lanterna-name').forEach(function(el){el.addEventListener('click',function(){playSnd(AUDIO.lant);});});
   }
 
