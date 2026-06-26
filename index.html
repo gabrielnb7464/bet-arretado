@@ -207,6 +207,8 @@
   .exxbtn{margin-top:9px;width:100%;background:linear-gradient(135deg,#3a1d05,#1e1305);border:1px solid #ff8a1e;color:#ffb45a;border-radius:10px;padding:9px;font-weight:700;font-size:12.5px;cursor:pointer;font-family:inherit}
   .exxbtn.on{background:linear-gradient(135deg,#ff7a14,#b53e00);color:#fff;border-color:#ffd9a8}
   .exx-tag{margin-top:9px;text-align:center;font-weight:700;font-size:12px;color:#ffb45a}
+  .exx-users{margin-top:9px;padding:7px 10px;border-radius:9px;background:linear-gradient(135deg,#2a1605,#160d04);border:1px solid #ff8a1e;color:#ffb45a;font-size:12px;text-align:center;line-height:1.4}
+  .exx-users b{color:#ffd9a8}
   .exxbadge{margin:0 0 12px;padding:9px 12px;border-radius:10px;background:linear-gradient(135deg,#2a1605,#160d04);border:1px solid #ff8a1e;color:#ffb45a;font-size:12.5px;text-align:center;line-height:1.4}
   .exxbadge.dim{opacity:.75;border-color:#5a3a18;color:#caa070}
   .exxbadge b{color:#ffd9a8}
@@ -581,6 +583,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   function playerById(id){return players.filter(function(p){return p.id===id;})[0]||null;}
   function exxIds(p){return (p&&p.exxList&&p.exxList.length)?p.exxList.slice():(p&&p.exx?[p.exx]:[]);}
   function inExx(p,mid){return exxIds(p).indexOf(mid)>=0;}
+  function exxUsersOf(mid){return players.filter(function(p){return inExx(p,mid);});}
   function exxCredits(pl){return pl?Math.floor(statsFor(pl).exact/2):0;}
   function exxEligible(pl){return exxCredits(pl)>0;}
   function duelAdj(pid){var adj=0;duels.forEach(function(d){if(d.status==='declined'){if(d.fromId===pid)adj+=3;if(d.toId===pid)adj-=3;}else if(d.status==='done'&&d.winner&&d.winner!=='tie'){var loser=d.winner===d.fromId?d.toId:d.fromId;if(d.winner===pid)adj+=10;if(loser===pid)adj-=10;}});return adj;}
@@ -642,7 +645,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   /* ---------- palpites ---------- */
   function myPredOf(m){var pr=me&&me.predictions&&me.predictions[m.id];return (pr&&pr.h!=null&&pr.a!=null&&pr.h!==''&&pr.a!=='')?pr:null;}
   function myPtsOf(m){var pr=myPredOf(m);return (m.result&&pr)?scoreForP(pr,m,me&&inExx(me,m.id)).pts:null;}
-  function visibleMatches(){var exxFree=0;if(filter==='exx'&&me){exxFree=Math.max(0,exxCredits(me)-exxIds(me).length);}var l=cfg.matches.filter(function(m){if(filter==='brasil')return m.weight===2;if(filter==='abertos')return lockInfo(m).state==='aberto';if(filter==='andamento')return isLive(m);if(filter==='exx')return (me&&inExx(me,m.id))||(exxFree>0&&lockInfo(m).state==='aberto');if(filter==='deibem'||filter==='lasquei'){var pts=myPtsOf(m);if(pts==null)return false;return filter==='deibem'?pts>0:pts===0;}return true;});if(filter==='exx'){l.sort(function(a,b){var ea=(me&&inExx(me,a.id))?0:1,eb=(me&&inExx(me,b.id))?0:1;if(ea!==eb)return ea-eb;return new Date(a.kickoff)-new Date(b.kickoff);});}else if(filter==='andamento'){l.sort(function(a,b){return new Date(a.kickoff)-new Date(b.kickoff);});}else if(filter==='todos'){l.sort(function(a,b){var ra=a.result?1:0,rb=b.result?1:0;if(ra!==rb)return rb-ra;var ka=new Date(a.kickoff).getTime(),kb=new Date(b.kickoff).getTime();return ra?kb-ka:ka-kb;});}else if(filter==='deibem'){l.sort(function(a,b){var pa=myPtsOf(a)||0,pb=myPtsOf(b)||0;if(pb!==pa)return pb-pa;return new Date(b.kickoff)-new Date(a.kickoff);});}else if(filter==='lasquei'){l.sort(function(a,b){return new Date(b.kickoff)-new Date(a.kickoff);});}return l;}
+  function visibleMatches(){var exxFree=0;if(filter==='exx'&&me){exxFree=Math.max(0,exxCredits(me)-exxIds(me).length);}var l=cfg.matches.filter(function(m){if(filter==='brasil')return m.weight===2;if(filter==='abertos')return lockInfo(m).state==='aberto';if(filter==='andamento')return isLive(m);if(filter==='exx')return exxUsersOf(m.id).length>0;if(filter==='deibem'||filter==='lasquei'){var pts=myPtsOf(m);if(pts==null)return false;return filter==='deibem'?pts>0:pts===0;}return true;});if(filter==='exx'){l.sort(function(a,b){var na=exxUsersOf(a.id).length,nb=exxUsersOf(b.id).length;if(na!==nb)return nb-na;return new Date(a.kickoff)-new Date(b.kickoff);});}else if(filter==='andamento'){l.sort(function(a,b){return new Date(a.kickoff)-new Date(b.kickoff);});}else if(filter==='todos'){l.sort(function(a,b){var ra=a.result?1:0,rb=b.result?1:0;if(ra!==rb)return rb-ra;var ka=new Date(a.kickoff).getTime(),kb=new Date(b.kickoff).getTime();return ra?kb-ka:ka-kb;});}else if(filter==='deibem'){l.sort(function(a,b){var pa=myPtsOf(a)||0,pb=myPtsOf(b)||0;if(pb!==pa)return pb-pa;return new Date(b.kickoff)-new Date(a.kickoff);});}else if(filter==='lasquei'){l.sort(function(a,b){return new Date(b.kickoff)-new Date(a.kickoff);});}return l;}
   function brazilWin(m,hv,av){if(m.weight!==2||hv==null||av==null)return false;var braHome=m.a.abbr==='BRA';var bra=braHome?hv:av,opp=braHome?av:hv;return bra>opp;}
   function brazilLose(m,hv,av){if(hv==null||av==null)return false;var braHome=m.a.abbr==='BRA',braAway=m.b.abbr==='BRA';if(!braHome&&!braAway)return false;var bra=braHome?hv:av,opp=braHome?av:hv;return bra<opp;}
   function lanternaId(){var rk=ranked();return rk.length>=2?rk[rk.length-1].p.id:null;}
@@ -668,18 +671,19 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
     return '<div class="streak"><span class="s-fl">\ud83d\udd25</span> Sua sequ\u00eancia de cravadas: <b>'+ex+'</b> placar'+(ex===1?'':'es')+' exato'+(ex===1?'':'s')+'</div>';}
   /* ---------- selos com sotaque (badges) ---------- */
   function badgeData(){var ms=(cfg&&cfg.matches?cfg.matches:[]).filter(function(m){return m.result&&new Date(m.kickoff).getTime()>=SCORE_FROM;}).sort(function(a,b){return new Date(a.kickoff)-new Date(b.kickoff);});
-    var winsBy={},exactBy={},zerosBy={},streakBy={},maxWins=0,maxZeros=0;
+    var winsBy={},exactBy={},zerosBy={},activeStreakBy={};
     duels.forEach(function(d){if(d.status==='done'&&d.winner&&d.winner!=='tie')winsBy[d.winner]=(winsBy[d.winner]||0)+1;});
-    players.forEach(function(p){var run=0,best=0,zeros=0,exact=0;
-      ms.forEach(function(m){var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null||pr.h===''||pr.a===''){run=0;return;}var b=scoreBase(pr,m.result),sc=scoreForP(pr,m,inExx(p,m.id));if(b.outcome){run++;if(run>best)best=run;}else run=0;if(sc.pts===0)zeros++;if(b.exact)exact++;});
-      exactBy[p.id]=exact;zerosBy[p.id]=zeros;streakBy[p.id]=best;if(zeros>maxZeros)maxZeros=zeros;});
-    Object.keys(winsBy).forEach(function(k){if(winsBy[k]>maxWins)maxWins=winsBy[k];});
-    return {winsBy:winsBy,exactBy:exactBy,zerosBy:zerosBy,streakBy:streakBy,maxWins:maxWins,maxZeros:maxZeros};}
+    players.forEach(function(p){var zeros=0,exact=0,activeRun=0;
+      ms.forEach(function(m){var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null||pr.h===''||pr.a===''){activeRun=0;return;}var b=scoreBase(pr,m.result),sc=scoreForP(pr,m,inExx(p,m.id));if(b.exact){activeRun++;}else{activeRun=0;}if(sc.pts===0)zeros++;if(b.exact)exact++;});
+      exactBy[p.id]=exact;zerosBy[p.id]=zeros;activeStreakBy[p.id]=activeRun;});
+    function maxVal(obj){var m=0;Object.keys(obj).forEach(function(k){if(obj[k]>m)m=obj[k];});return m;}
+    var maxExact=maxVal(exactBy),maxZeros=maxVal(zerosBy),maxWins=maxVal(winsBy),maxStreak=maxVal(activeStreakBy);
+    return {winsBy:winsBy,exactBy:exactBy,zerosBy:zerosBy,activeStreakBy:activeStreakBy,maxExact:maxExact,maxZeros:maxZeros,maxWins:maxWins,maxStreak:maxStreak};}
   function badgesFor(p,bd){var out=[];
-    if((bd.exactBy[p.id]||0)>=3)out.push({i:'\ud83c\udfaf',l:'Cabra Cravador'});
-    if((bd.streakBy[p.id]||0)>=3)out.push({i:'\ud83d\udd25',l:'Pegou Fogo'});
-    if(bd.maxWins>=1&&(bd.winsBy[p.id]||0)===bd.maxWins)out.push({i:'\ud83d\udc13',l:'Rei da Rinha'});
-    if(bd.maxZeros>=3&&(bd.zerosBy[p.id]||0)===bd.maxZeros)out.push({i:'\ud83d\udca5',l:'Zica'});
+    if(bd.maxExact>=1&&(bd.exactBy[p.id]||0)===bd.maxExact)out.push({i:'\ud83c\udfaf',l:'Cabra Cravador — mais placares exatos'});
+    if(bd.maxStreak>=2&&(bd.activeStreakBy[p.id]||0)===bd.maxStreak)out.push({i:'\ud83d\udd25',l:'Pegou Fogo — maior sequência ativa de exatos'});
+    if(bd.maxWins>=1&&(bd.winsBy[p.id]||0)===bd.maxWins)out.push({i:'\ud83d\udc13',l:'Rei da Rinha — mais vitórias no Galo'});
+    if(bd.maxZeros>=1&&(bd.zerosBy[p.id]||0)===bd.maxZeros)out.push({i:'\ud83d\udca5',l:'Zica — mais palpites com zero pontos'});
     return out;}
   function badgesHtml(p,bd){var b=badgesFor(p,bd);if(!b.length)return '';return '<span class="badges">'+b.map(function(x){return '<span class="bdg" title="'+x.l+'">'+x.i+'</span>';}).join('')+'</span>';}
   /* ---------- recortes do ranking (geral / hoje / semana) ---------- */
@@ -703,21 +707,23 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
     if(exxC>0){html+='<div class="exxbadge">🔥 Você tem <b>'+exxC+'</b> Exxtourado'+(exxC>1?'s':'')+' · <b>'+exxFree+'</b> livre'+(exxFree===1?'':'s')+(exxFree>0?' pra usar':' (todos em uso)')+'</div>';}
     else{html+='<div class="exxbadge dim">🔥 Crave <b>2 placares exatos</b> e ganhe <b>1 Exxtourado</b> (faz um jogo valer ×2)</div>';}
     var inTodos=(filter==='todos'||filter==='deibem'||filter==='lasquei');
-    html+='<div class="filters" id="filters"><button class="fchip" data-f="abertos" aria-pressed="'+(filter==='abertos')+'">Abertos ('+openCount+')</button><button class="fchip live-chip" data-f="andamento" aria-pressed="'+(filter==='andamento')+'">🔴 Em andamento ('+liveCount+')</button><button class="fchip br" data-f="brasil" aria-pressed="'+(filter==='brasil')+'">🇧🇷 Brasil 2×</button><button class="fchip exx-chip" data-f="exx" aria-pressed="'+(filter==='exx')+'">🔥 Exxtourado'+(exxFree>0?' ('+exxFree+')':'')+'</button><button class="fchip" data-f="todos" aria-pressed="'+inTodos+'">Todos (72)</button></div>';
+    var exxUsedGames=cfg.matches.filter(function(m){return exxUsersOf(m.id).length>0;}).length;
+    html+='<div class="filters" id="filters"><button class="fchip" data-f="abertos" aria-pressed="'+(filter==='abertos')+'">Abertos ('+openCount+')</button><button class="fchip live-chip" data-f="andamento" aria-pressed="'+(filter==='andamento')+'">🔴 Em andamento ('+liveCount+')</button><button class="fchip br" data-f="brasil" aria-pressed="'+(filter==='brasil')+'">🇧🇷 Brasil 2×</button><button class="fchip exx-chip" data-f="exx" aria-pressed="'+(filter==='exx')+'">🔥 Exxtourado'+(exxUsedGames>0?' ('+exxUsedGames+')':'')+'</button><button class="fchip" data-f="todos" aria-pressed="'+inTodos+'">Todos (72)</button></div>';
     if(inTodos){html+='<div class="filters subfilters" id="subfilters"><button class="fchip" data-f="todos" aria-pressed="'+(filter==='todos')+'">Todos os jogos</button><button class="fchip ok" data-f="deibem" aria-pressed="'+(filter==='deibem')+'">😎 Agora vai! ('+deibemCount+')</button><button class="fchip ko" data-f="lasquei" aria-pressed="'+(filter==='lasquei')+'">😩 Me Lasquei, siô.. ('+lasqueiCount+')</button></div>';}
     var list=visibleMatches();
-    if(!list.length){html+='<div class="empty">'+(filter==='andamento'?'Nenhum jogo rolando agora. Volta na hora dos jogos! ⏰':filter==='abertos'?'Nenhum jogo aberto agora. Veja <b>Todos</b> ou aguarde os próximos.':filter==='exx'?(exxFree>0?'Nenhum jogo aberto pra Exxtourar agora. Volta quando abrir o próximo! 🔥':'Você ainda não tem Exxtourado livre. Crave <b>2 placares exatos</b> pra ganhar um! 🎯'):filter==='deibem'?'Você ainda não pontuou em nenhum jogo decidido. Bora pro próximo! 🍀':filter==='lasquei'?'Nenhum vacilo até agora — tá voando! 😎':'Nada por aqui.')+'</div>';root.innerHTML=html;bindFilters();return;}
+    if(!list.length){html+='<div class="empty">'+(filter==='andamento'?'Nenhum jogo rolando agora. Volta na hora dos jogos! ⏰':filter==='abertos'?'Nenhum jogo aberto agora. Veja <b>Todos</b> ou aguarde os próximos.':filter==='exx'?'Ninguém usou Exxtourado ainda. Quando um cabra cravar <b>2 placares exatos</b> e usar o Exxtourado, o jogo aparece aqui pra todo mundo ver. 🔥':filter==='deibem'?'Você ainda não pontuou em nenhum jogo decidido. Bora pro próximo! 🍀':filter==='lasquei'?'Nenhum vacilo até agora — tá voando! 😎':'Nada por aqui.')+'</div>';root.innerHTML=html;bindFilters();return;}
     var lastDay='';
     list.forEach(function(m){
       var dk=dayKey(m.kickoff);if((filter==='todos'||filter==='abertos')&&dk!==lastDay){lastDay=dk;html+='<div class="daylabel">'+esc(dk)+'</div>';}
       var li=lockInfo(m),pr=(me.predictions&&me.predictions[m.id])||{h:'',a:''},locked=li.state!=='aberto',hasPred=(pr.h!==''&&pr.h!=null&&pr.a!==''&&pr.a!=null),sc=m.result?scoreForP(pr,m,me&&inExx(me,m.id)):null,counts=new Date(m.kickoff).getTime()>=SCORE_FROM;
       var live=isLive(m);var st=live?'🔴 AO VIVO':(li.state==='final'?'Encerrado':li.state==='fechado'?'Fechado':'Aberto');
+      var exxUsersHtml='';if(filter==='exx'){var exu=exxUsersOf(m.id);if(exu.length){exxUsersHtml='<div class="exx-users">🔥 Exxtourado por '+exu.map(function(p){return '<b>'+esc(p.name)+'</b>';}).join(', ')+' · vale '+(m.weight===2?'×4':'×2')+'</div>';}}
       html+='<div class="match'+(m.weight===2?' br':'')+(me&&inExx(me,m.id)?' exx':'')+'" data-mid="'+esc(m.id)+'"><div class="row1"><span class="chip">'+esc(m.group)+(m.weight===2?'</span><span class="br-badge">VALE 2×</span>':'</span>')+'<span class="status '+(live?'live':li.state)+'">'+st+'</span></div>'+
         '<div class="scoreboard"><div class="team"><div class="tline">'+flagImg(m.a.abbr)+'<span class="abbr">'+esc(m.a.abbr)+'</span></div><span class="full">'+esc(m.a.name)+'</span></div>'+
         '<div class="pred"><input type="number" min="0" max="30" inputmode="numeric" class="ph" value="'+esc(pr.h)+'" '+(locked?'disabled':'')+' aria-label="Gols '+esc(m.a.name)+'"><span class="x">×</span><input type="number" min="0" max="30" inputmode="numeric" class="pa" value="'+esc(pr.a)+'" '+(locked?'disabled':'')+' aria-label="Gols '+esc(m.b.name)+'"></div>'+
         '<div class="team"><div class="tline">'+flagImg(m.b.abbr)+'<span class="abbr">'+esc(m.b.abbr)+'</span></div><span class="full">'+esc(m.b.name)+'</span></div></div>'+
         '<div class="meta"><span class="when">'+esc(brt(m.kickoff))+(li.state==='aberto'?'<span class="lock'+(li.rem<10800000?' soon':'')+'">Fecha em '+fmtRem(li.rem)+'</span>':live?'<span class="lock live-lock">🔴 em andamento</span>':(li.state==='fechado'?'<span class="lock">Palpites encerrados</span>':''))+'</span>'+
-        (m.result?'<span class="result-line"><span class="official'+(live?' partial':'')+'">'+(live?'Parcial ':'Oficial ')+m.result.h+'×'+m.result.a+'</span>'+(counts?'<span class="pts '+(sc.exact?'exato':sc.pts>0?'win':'zero')+'">'+(sc.pts>0?'+':'')+sc.pts+(live?' parc.':'')+'</span>':'<span class="pts zero">histórico</span>')+'</span>':live?'<span class="result-line"><span class="official partial">⏳ aguardando placar ao vivo</span></span>':'<button class="confirmbtn'+(hasPred?' done':'')+'" data-confirm="'+esc(m.id)+'"'+(locked?' disabled':'')+'>'+(hasPred?'Confirmado ✓':'Confirmar palpite')+'</button><span class="saved" data-save="'+esc(m.id)+'">salvo ✓</span>')+'</div>'+(Date.now()>=new Date(m.kickoff).getTime()?'<button class="predbtn" data-preds="'+esc(m.id)+'">👀 Ver palpites de todos</button>':'')+exxCtl(m)+'</div>';
+        (m.result?'<span class="result-line"><span class="official'+(live?' partial':'')+'">'+(live?'Parcial ':'Oficial ')+m.result.h+'×'+m.result.a+'</span>'+(counts?'<span class="pts '+(sc.exact?'exato':sc.pts>0?'win':'zero')+'">'+(sc.pts>0?'+':'')+sc.pts+(live?' parc.':'')+'</span>':'<span class="pts zero">histórico</span>')+'</span>':live?'<span class="result-line"><span class="official partial">⏳ aguardando placar ao vivo</span></span>':'<button class="confirmbtn'+(hasPred?' done':'')+'" data-confirm="'+esc(m.id)+'"'+(locked?' disabled':'')+'>'+(hasPred?'Confirmado ✓':'Confirmar palpite')+'</button><span class="saved" data-save="'+esc(m.id)+'">salvo ✓</span>')+'</div>'+(Date.now()>=new Date(m.kickoff).getTime()?'<button class="predbtn" data-preds="'+esc(m.id)+'">👀 Ver palpites de todos</button>':'')+exxUsersHtml+exxCtl(m)+'</div>';
     });
     root.innerHTML=html;bindFilters();
     $$('#palpites .predbtn').forEach(function(b){b.addEventListener('click',function(){openPreds(b.dataset.preds);});});
