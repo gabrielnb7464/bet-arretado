@@ -157,6 +157,14 @@
   table.rank .pos{font-family:'Oswald';font-weight:700;color:var(--muted)}
   table.rank .tp{font-family:'Oswald';font-weight:700;font-size:15px;color:var(--gold)}
   table.rank tr.me-row{background:rgba(244,196,48,.06)}table.rank tr.last-row{background:rgba(248,113,113,.06)}
+  .rinha-rank{width:100%;border-collapse:collapse;margin-top:10px}
+  .rinha-rank th,.rinha-rank td{padding:7px 7px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}
+  .rinha-rank th{font-family:Oswald,Arial,sans-serif;text-transform:uppercase;font-size:11px;color:var(--muted);letter-spacing:.4px}
+  .rinha-rank td.pos{color:var(--muted);font-weight:700;width:26px}
+  .rinha-rank td.vv{color:var(--green);font-weight:700;text-align:center;width:32px}
+  .rinha-rank td.dd{color:var(--red);font-weight:700;text-align:center;width:32px}
+  .rinha-rank td.mm{font-family:Oswald,Arial,sans-serif;font-weight:700;text-align:right;width:52px;color:var(--gold)}
+  .rinha-rank tr.me-row{background:rgba(246,192,38,.09)}
   .icu{background:linear-gradient(180deg,rgba(248,113,113,.07),var(--panel));border:1px solid rgba(248,113,113,.3);border-radius:14px;padding:14px;margin-top:14px}
   .icu .cap{font-family:'Oswald';font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--red);margin-bottom:10px;display:flex;align-items:center;gap:7px}
   .icu-scene{display:flex;align-items:flex-end;justify-content:center;gap:6px;height:74px;position:relative}
@@ -429,7 +437,7 @@
     <div class="card" style="border-color:rgba(244,196,48,.35)">
       <h2>🏅 Selos do ranking</h2>
       <p class="lead" style="margin:0 0 6px">Cada selo é de <b>um cabra só</b>: o <b>campeão do quesito</b>. Deu empate, <b>os dois levam</b>.</p>
-      <ul class="tb"><li>🎯 <b>Cabra Cravador</b> — quem tem <b>mais placares exatos</b>.</li><li>🔥 <b>Pegou Fogo</b> — maior <b>sequência ativa</b> de exatos (mín. 2 seguidos; errou um, zera).</li><li>🐓 <b>Rei da Rinha</b> — quem tem <b>mais vitórias</b> no Galo (<b style="color:#ffb45a">+15 no fim da Copa</b>).</li><li>💥 <b>Zica</b> — quem tem <b>mais palpites zerados</b>.</li></ul>
+      <ul class="tb"><li>🎯 <b>Cabra Cravador</b> — quem tem <b>mais placares exatos</b>.</li><li>🔥 <b>Pegou Fogo</b> — maior <b>sequência ativa</b> de exatos (mín. 2 seguidos; errou um, zera).</li><li>🐓 <b>Rei da Rinha</b> — <b>melhor saldo</b> de duelos (+1 vitória, −1 derrota); <b style="color:#ffb45a">+15 no fim da Copa</b>.</li><li>💥 <b>Zica</b> — quem tem <b>mais palpites zerados</b>.</li></ul>
     </div>
     <div class="card" style="border-color:rgba(255,138,30,.35)">
       <h2>🤠 Tarefa do Cangaceiro</h2>
@@ -441,7 +449,7 @@
     </div>
     <div class="card" style="border-color:rgba(255,170,40,.45)">
       <h2>🐓 Galo de Rinha</h2>
-      <p class="lead" style="margin:0">Duelo 1×1 só no <b>mata-mata</b>. Desafie quem está à sua frente ou empatado (mín. 10 pts — e você também precisa de 10). <b>Por dia</b>, você desafia até <b>2 cabras</b> diferentes, e cada um leva no <b>máximo 2 desafios</b> por dia (1 por jogo). O desafiado responde até o início do jogo: quem <b>recusa ou não responde</b> leva 🐔 e <b>−3</b> (desafiante +3). Aceitou: quem pontuar melhor naquele jogo ganha <b>+10</b> (o outro −10); empate, ninguém pontua. O saldo dos duelos entra no ranking com o selo ⚔️. E tem prêmio grande: quem <b>terminar a Copa como 🐓 Rei da Rinha</b> (mais vitórias) leva um <b style="color:#ffb45a">extra de +15 pontos</b> no fim — deu empate, os dois levam.</p>
+      <p class="lead" style="margin:0">Duelo 1×1 só no <b>mata-mata</b>. Desafie quem está à sua frente ou empatado (mín. 10 pts — e você também precisa de 10). <b>Por dia</b>, você desafia até <b>2 cabras</b> diferentes, e cada um leva no <b>máximo 2 desafios</b> por dia (1 por jogo). O desafiado responde até o início do jogo: quem <b>recusa ou não responde</b> leva 🐔 e <b>−3</b> (desafiante +3). Aceitou: quem pontuar melhor naquele jogo ganha <b>+10</b> (o outro −10); empate, ninguém pontua. O saldo dos duelos entra no ranking com o selo ⚔️. A rinha tem um <b>ranking próprio com 3 filtros</b>: 🐓 <b>Galo Macho</b> (mais vitórias), 🐔 <b>Galinha Pintadinha</b> (mais derrotas) e 👑 <b>Rei da Rinha</b> (<b>saldo</b>: +1 por vitória, −1 por derrota, podendo ficar negativo). E tem prêmio grande: quem <b>terminar a Copa como 👑 Rei da Rinha</b> (melhor saldo) leva um <b style="color:#ffb45a">extra de +15 pontos</b> no fim — deu empate, os dois levam.</p>
     </div>
   </section>
 
@@ -578,7 +586,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   function flagImg(ab){var c=ISO[ab];return c?'<img class="flagimg" src="https://flagcdn.com/w40/'+c+'.png" alt="'+esc(ab)+'" loading="lazy">':'';}
   function buildMatches(){return FIX.map(function(f,i){var g=f[0],h=f[1],a=f[2],ko=f[3],res=f[4],br=(h==='BRA'||a==='BRA');return {id:'g'+i,group:'Grupo '+g,kickoff:ko,weight:br?2:1,a:{name:TEAMS[h].n,abbr:h,flag:TEAMS[h].f},b:{name:TEAMS[a].n,abbr:a,flag:TEAMS[a].f},result:res?{h:res[0],a:res[1]}:null};});}
 
-  var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming',myLastPos=null,duels=[],galoArenaFilter='all',rankView='geral';
+  var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming',myLastPos=null,duels=[],galoArenaFilter='all',rankView='geral',galoRankView='rei';
   var $=function(s,r){return (r||document).querySelector(s);},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
   function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
@@ -607,8 +615,11 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   function duelAdj(pid){var adj=0;duels.forEach(function(d){if(d.status==='declined'){if(d.fromId===pid)adj+=3;if(d.toId===pid)adj-=3;}else if(d.status==='done'&&d.winner&&d.winner!=='tie'){var loser=d.winner===d.fromId?d.toId:d.fromId;if(d.winner===pid)adj+=10;if(loser===pid)adj-=10;}});return adj;}
   function cupFinished(){if(!cfg||!cfg.matches)return false;return cfg.matches.some(function(m){var g=(m.group||'').toLowerCase().trim();var isFinal=(g==='final'||g==='grande final'||g.indexOf('decis')>=0);return isFinal&&m.result;});}
   function duelWinsOf(pid){var n=0;duels.forEach(function(d){if(d.status==='done'&&d.winner===pid&&d.winner!=='tie')n++;});return n;}
+  function duelLossesOf(pid){var n=0;duels.forEach(function(d){if(d.status==='done'&&d.winner&&d.winner!=='tie'){var loser=d.winner===d.fromId?d.toId:d.fromId;if(loser===pid)n++;}});return n;}
+  function duelNetOf(pid){return duelWinsOf(pid)-duelLossesOf(pid);}
   function maxDuelWins(){var mx=0;players.forEach(function(p){var w=duelWinsOf(p.id);if(w>mx)mx=w;});return mx;}
-  function reiBonus(p){if(!p||!cupFinished())return 0;var mx=maxDuelWins();if(mx<1)return 0;return duelWinsOf(p.id)===mx?15:0;}
+  function maxDuelNet(){var mx=-Infinity;players.forEach(function(p){if((duelWinsOf(p.id)+duelLossesOf(p.id))>0){var n=duelNetOf(p.id);if(n>mx)mx=n;}});return mx===-Infinity?0:mx;}
+  function reiBonus(p){if(!p||!cupFinished())return 0;var mx=maxDuelNet();if(mx<1)return 0;return (duelWinsOf(p.id)+duelLossesOf(p.id))>0&&duelNetOf(p.id)===mx?15:0;}
   async function saveDuel(d){if(fb){try{await fb.db.ref('bolao/duels/'+d.id).set(d);}catch(e){}}else{var o=await getObj('bolao_duels',true)||{};o[d.id]=d;await setObj('bolao_duels',o,true);}var ix=-1;for(var i=0;i<duels.length;i++)if(duels[i].id===d.id)ix=i;if(ix>=0)duels[ix]=d;else duels.push(d);}
   async function resolveDuels(){if(!cfg||!cfg.matches||!duels||!duels.length)return;var now=Date.now();for(var i=0;i<duels.length;i++){var d=duels[i];var m=matchById(d.matchId);if(!m)continue;if(d.status==='pending'&&now>=new Date(m.kickoff).getTime()){d.status='declined';d.auto=true;d.winner=d.fromId;await saveDuel(d);}else if(d.status==='accepted'&&m.result){var pf=playerById(d.fromId),pt=playerById(d.toId);var sf=pf?scoreForP((pf.predictions||{})[m.id],m,inExx(pf,m.id)).pts:0;var stt=pt?scoreForP((pt.predictions||{})[m.id],m,inExx(pt,m.id)).pts:0;d.sf=sf;d.st=stt;d.winner=sf>stt?d.fromId:(stt>sf?d.toId:'tie');d.status='done';await saveDuel(d);}}}
   function challengersFor(matchId,toId){return duels.filter(function(d){return d.matchId===matchId&&d.toId===toId;}).length;}
@@ -711,18 +722,19 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
     return '<div class="streak"><span class="s-fl">\ud83d\udd25</span> Sua sequ\u00eancia de cravadas: <b>'+ex+'</b> placar'+(ex===1?'':'es')+' exato'+(ex===1?'':'s')+'</div>';}
   /* ---------- selos com sotaque (badges) ---------- */
   function badgeData(){var ms=(cfg&&cfg.matches?cfg.matches:[]).filter(function(m){return m.result&&new Date(m.kickoff).getTime()>=SCORE_FROM;}).sort(function(a,b){return new Date(a.kickoff)-new Date(b.kickoff);});
-    var winsBy={},exactBy={},zerosBy={},activeStreakBy={};
-    duels.forEach(function(d){if(d.status==='done'&&d.winner&&d.winner!=='tie')winsBy[d.winner]=(winsBy[d.winner]||0)+1;});
+    var winsBy={},exactBy={},zerosBy={},activeStreakBy={},netBy={};
+    duels.forEach(function(d){if(d.status==='done'&&d.winner&&d.winner!=='tie'){winsBy[d.winner]=(winsBy[d.winner]||0)+1;var loser=d.winner===d.fromId?d.toId:d.fromId;netBy[d.winner]=(netBy[d.winner]||0)+1;netBy[loser]=(netBy[loser]||0)-1;}});
     players.forEach(function(p){var zeros=0,exact=0,activeRun=0;
       ms.forEach(function(m){var pr=p.predictions&&p.predictions[m.id];if(!pr||pr.h==null||pr.a==null||pr.h===''||pr.a===''){activeRun=0;return;}var b=scoreBase(pr,m.result),sc=scoreForP(pr,m,inExx(p,m.id));if(b.exact){activeRun++;}else{activeRun=0;}if(sc.pts===0)zeros++;if(b.exact)exact++;});
       exactBy[p.id]=exact;zerosBy[p.id]=zeros;activeStreakBy[p.id]=activeRun;});
     function maxVal(obj){var m=0;Object.keys(obj).forEach(function(k){if(obj[k]>m)m=obj[k];});return m;}
     var maxExact=maxVal(exactBy),maxZeros=maxVal(zerosBy),maxWins=maxVal(winsBy),maxStreak=maxVal(activeStreakBy);
-    return {winsBy:winsBy,exactBy:exactBy,zerosBy:zerosBy,activeStreakBy:activeStreakBy,maxExact:maxExact,maxZeros:maxZeros,maxWins:maxWins,maxStreak:maxStreak};}
+    var maxNet=-Infinity;Object.keys(netBy).forEach(function(k){if(netBy[k]>maxNet)maxNet=netBy[k];});if(maxNet===-Infinity)maxNet=0;
+    return {winsBy:winsBy,exactBy:exactBy,zerosBy:zerosBy,activeStreakBy:activeStreakBy,netBy:netBy,maxExact:maxExact,maxZeros:maxZeros,maxWins:maxWins,maxStreak:maxStreak,maxNet:maxNet};}
   function badgesFor(p,bd){var out=[];
     if(bd.maxExact>=1&&(bd.exactBy[p.id]||0)===bd.maxExact)out.push({i:'\ud83c\udfaf',l:'Cabra Cravador — mais placares exatos'});
     if(bd.maxStreak>=2&&(bd.activeStreakBy[p.id]||0)===bd.maxStreak)out.push({i:'\ud83d\udd25',l:'Pegou Fogo — maior sequência ativa de exatos'});
-    if(bd.maxWins>=1&&(bd.winsBy[p.id]||0)===bd.maxWins)out.push({i:'\ud83d\udc13',l:'Rei da Rinha — mais vitórias no Galo'});
+    if(bd.maxNet>=1&&(bd.netBy[p.id]||0)===bd.maxNet)out.push({i:'\ud83d\udc13',l:'Rei da Rinha — melhor saldo de duelos'});
     if(bd.maxZeros>=1&&(bd.zerosBy[p.id]||0)===bd.maxZeros)out.push({i:'\ud83d\udca5',l:'Zica — mais palpites com zero pontos'});
     return out;}
   function badgesHtml(p,bd){var b=badgesFor(p,bd);if(!b.length)return '';return '<span class="badges">'+b.map(function(x){return '<span class="bdg" title="'+x.l+'">'+x.i+'</span>';}).join('')+'</span>';}
@@ -806,11 +818,29 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   function notifyRank(kind){var lead=kind==='lead',emo=lead?'🏆':'💀';var tt=lead?'Você assumiu a liderança!':'Virou o Cabra Abestado';var bd=lead?'Tá estribado! Você é o 1º do Bet Arretado agora. 🔥':'Caiu pra última posição do bolão. Bora reagir! 😬';showRankBanner(kind,emo,tt,bd);try{if('Notification' in window&&Notification.permission==='granted')new Notification(emo+' '+tt,{body:bd,tag:'betarretado-rank'});}catch(e){}try{if(navigator.vibrate)navigator.vibrate(lead?[60,40,60]:[140]);}catch(e){}}
   function hideRankPop(){var el=$('#rankPop');if(el)el.classList.remove('on');}
   function showRankBanner(kind,emo,tt,bd){var el=$('#rankPop');if(!el)return;el.className='rankpop '+kind;el.innerHTML='<span class="rp-emo">'+emo+'</span><div><div class="rp-tt">'+esc(tt)+'</div><div class="rp-bd">'+esc(bd)+'</div></div><button class="rp-x" id="rpX">✕</button>';void el.offsetWidth;el.classList.add('on');var x=$('#rpX');if(x)x.addEventListener('click',hideRankPop);clearTimeout(rankPopT);rankPopT=setTimeout(hideRankPop,6500);}
+  function galoRankData(view){var rows=players.map(function(p){var w=duelWinsOf(p.id),l=duelLossesOf(p.id);return {p:p,w:w,l:l,net:w-l};}).filter(function(r){return (r.w+r.l)>0;});
+    if(view==='macho')rows.sort(function(a,b){return b.w-a.w||b.net-a.net||a.p.name.localeCompare(b.p.name,'pt');});
+    else if(view==='pintada')rows.sort(function(a,b){return b.l-a.l||a.net-b.net||a.p.name.localeCompare(b.p.name,'pt');});
+    else rows.sort(function(a,b){return b.net-a.net||b.w-a.w||a.p.name.localeCompare(b.p.name,'pt');});
+    return rows;}
+  function galoRankHtml(){var tabs=[['rei','\uD83D\uDC51 Rei da Rinha'],['macho','\uD83D\uDC13 Galo Macho'],['pintada','\uD83D\uDC14 Galinha Pintadinha']];
+    var h='<div class="card"><h2>\uD83C\uDFC6 Ranking da Rinha</h2><div class="filters" id="galotabs">'+tabs.map(function(t){return '<button class="fchip" data-gv="'+t[0]+'" aria-pressed="'+(galoRankView===t[0])+'">'+t[1]+'</button>';}).join('')+'</div>';
+    var sub=galoRankView==='macho'?'Quem mais venceu duelos.':(galoRankView==='pintada'?'Quem mais perdeu duelos.':'Saldo dos duelos: <b>+1</b> por vitória, <b>−1</b> por derrota (pode ficar negativo). Quem terminar a Copa no topo leva <b>+15</b>.');
+    h+='<p class="lead" style="margin:6px 0 0;font-size:12.5px;color:var(--muted)">'+sub+'</p>';
+    var rows=galoRankData(galoRankView);
+    if(!rows.length){h+='<p class="lead" style="margin:8px 0 0">Ninguém duelou ainda. Quando os duelos forem decididos, o ranking aparece aqui. \uD83D\uDC13</p></div>';return h;}
+    var ml=galoRankView==='macho'?'Vitórias':(galoRankView==='pintada'?'Derrotas':'Saldo');
+    h+='<table class="rinha-rank"><thead><tr><th>#</th><th>Cabra</th><th title="Vitórias">V</th><th title="Derrotas">D</th><th style="text-align:right">'+ml+'</th></tr></thead><tbody>';
+    rows.forEach(function(r,i){var metric=galoRankView==='macho'?r.w:(galoRankView==='pintada'?r.l:(r.net>0?'+'+r.net:''+r.net));var mine=me&&r.p.id===me.id;
+      h+='<tr'+(mine?' class="me-row"':'')+'><td class="pos">'+(i+1)+'</td><td>'+esc(r.p.name)+'</td><td class="vv">'+r.w+'</td><td class="dd">'+r.l+'</td><td class="mm">'+metric+'</td></tr>';});
+    h+='</tbody></table></div>';return h;}
+  function bindGaloTabs(){$$('#galotabs .fchip').forEach(function(b){b.addEventListener('click',function(){galoRankView=b.dataset.gv;renderGalo();});});}
   function renderGalo(){var root=$('#galo');if(!root)return;if(!me){root.innerHTML='';return;}
     var meSt=statsFor(me);
     var html='<div class="rank-head">🐓 <b>Galo de Rinha</b> · duelos no mata-mata</div>';
     var koMatches=cfg.matches.filter(isKO).sort(function(a,b){return new Date(a.kickoff)-new Date(b.kickoff);});
     if(!koMatches.length){html+='<div class="card"><p class="lead" style="margin:0">A rinha começa no <b>mata-mata</b> (a partir da primeira fase eliminatória). Assim que os jogos de mata-mata forem cadastrados, você poderá desafiar a galera. 🐓</p></div>';root.innerHTML=html;return;}
+    html+=galoRankHtml();
     var toAnswer=duels.filter(function(d){return d.toId===me.id&&d.status==='pending'&&!matchStarted(d.matchId);});
     if(toAnswer.length){html+='<div class="card"><h2>⚔️ Desafios pra você responder</h2>';toAnswer.forEach(function(d){var fp=playerById(d.fromId),m=matchById(d.matchId);html+='<div class="duel"><div class="dl-top"><b>'+esc(fp?fp.name:'?')+' te desafiou</b><small>'+(m?esc(m.a.abbr)+' × '+esc(m.b.abbr)+' · '+esc(m.group):'')+'</small></div><div class="dl-act"><button class="btn sm acc" data-acc="'+esc(d.id)+'">Aceitar</button><button class="btn sm ghost dec" data-dec="'+esc(d.id)+'">Recusar 🐔</button></div></div>';});html+='</div>';}
     html+='<div class="card"><h2>Criar desafio</h2>';
@@ -827,6 +857,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
     arena.forEach(function(d){var fp=playerById(d.fromId),tp=playerById(d.toId),m=matchById(d.matchId);var fn=esc(fp?fp.name:'?'),tn=esc(tp?tp.name:'?');var cls='duel',body='';var scoreTag=(m&&m.result)?'<span class="dl-score">'+esc(m.a.abbr)+' '+m.result.h+'×'+m.result.a+' '+esc(m.b.abbr)+'</span>':'';if(d.status==='pending'){body='<span class="dl-st pend">aguardando resposta de '+tn+'</span>';}else if(d.status==='accepted'){body='<span class="dl-st acc">valendo! ⚔️</span>';}else if(d.status==='declined'){cls+=' chick';body='<span class="dl-st dec">'+tn+' 🐔 '+(d.auto?'não respondeu a tempo':'recusou')+' · '+fn+' +3 / '+tn+' −3</span>';}else if(d.status==='done'){if(d.winner==='tie')body='<span class="dl-st draw">empate ('+(d.sf!=null?d.sf:'?')+'×'+(d.st!=null?d.st:'?')+') · ninguém pontua</span>';else{var wn=d.winner===d.fromId?fn:tn,ln=d.winner===d.fromId?tn:fn;body='<span class="dl-st win">🏆 '+wn+' venceu ('+(d.sf!=null?d.sf:'?')+'×'+(d.st!=null?d.st:'?')+') · +10 / '+ln+' −10</span>';}}var meTag=(d.fromId===me.id||d.toId===me.id)?' <span style="color:var(--gold)">·</span>':'';html+='<div class="'+cls+'"><div class="dl-top"><b>'+fn+' ⚔️ '+tn+'</b><small>'+(m?esc(m.a.abbr)+' × '+esc(m.b.abbr)+' · '+esc(m.group):'')+'</small></div>'+scoreTag+body+'</div>';});
     html+='</div>';
     root.innerHTML=html;
+    bindGaloTabs();
     $$('#galo .acc').forEach(function(b){b.addEventListener('click',function(){acceptDuel(b.dataset.acc);});});
     $$('#galo .dec').forEach(function(b){b.addEventListener('click',function(){if(confirm('Recusar o duelo? Você perde 3 pontos e leva um 🐔.'))declineDuel(b.dataset.dec);});});
     $$('#galo .opp').forEach(function(b){b.addEventListener('click',function(){if(b.disabled)return;var nm=b.textContent.replace('⚔️ ','').replace(/\s*\(\d\/2\)\s*$/,'').trim();if(confirm('Desafiar '+nm+' neste jogo?'))createDuel(b.dataset.m,b.dataset.to);});});
