@@ -483,7 +483,9 @@ var FIX=[
 ["B","SUI","CAN","2026-06-24T15:00:00-04:00",null],["B","BIH","QAT","2026-06-24T15:00:00-04:00",null],["C","SCO","BRA","2026-06-24T18:00:00-04:00",null],["C","MAR","HAI","2026-06-24T18:00:00-04:00",null],["A","CZE","MEX","2026-06-24T21:00:00-04:00",null],["A","RSA","KOR","2026-06-24T21:00:00-04:00",null],
 ["E","CUW","CIV","2026-06-25T16:00:00-04:00",null],["E","ECU","GER","2026-06-25T16:00:00-04:00",null],["F","JPN","SWE","2026-06-25T19:00:00-04:00",null],["F","TUN","NED","2026-06-25T19:00:00-04:00",null],["D","TUR","USA","2026-06-25T22:00:00-04:00",null],["D","PAR","AUS","2026-06-25T22:00:00-04:00",null],
 ["I","NOR","FRA","2026-06-26T15:00:00-04:00",null],["I","SEN","IRQ","2026-06-26T15:00:00-04:00",null],["H","CPV","KSA","2026-06-26T20:00:00-04:00",null],["H","URU","ESP","2026-06-26T20:00:00-04:00",null],["G","EGY","IRN","2026-06-26T23:00:00-04:00",null],["G","NZL","BEL","2026-06-26T23:00:00-04:00",null],
-["L","PAN","ENG","2026-06-27T17:00:00-04:00",null],["L","CRO","GHA","2026-06-27T17:00:00-04:00",null],["K","COL","POR","2026-06-27T19:30:00-04:00",null],["K","COD","UZB","2026-06-27T19:30:00-04:00",null],["J","ALG","AUT","2026-06-27T22:00:00-04:00",null],["J","JOR","ARG","2026-06-27T22:00:00-04:00",null]
+["L","PAN","ENG","2026-06-27T17:00:00-04:00",null],["L","CRO","GHA","2026-06-27T17:00:00-04:00",null],["K","COL","POR","2026-06-27T19:30:00-04:00",null],["K","COD","UZB","2026-06-27T19:30:00-04:00",null],["J","ALG","AUT","2026-06-27T22:00:00-04:00",null],["J","JOR","ARG","2026-06-27T22:00:00-04:00",null],
+["Semifinal","ESP","FRA","2026-07-14T16:00:00-04:00",[2,0]],["Semifinal","ARG","ENG","2026-07-15T16:00:00-04:00",[2,1]],
+["Grande Final","ESP","ARG","2026-07-19T15:00:00-04:00",null]
 ];
 
 /* ============ CONFIGURE AQUI ============ */
@@ -582,7 +584,34 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   var REACT_EMOJIS=['🔥','🎯','😂','🤡'];
   var ISO={MEX:'mx',RSA:'za',KOR:'kr',CZE:'cz',CAN:'ca',BIH:'ba',QAT:'qa',SUI:'ch',BRA:'br',MAR:'ma',HAI:'ht',SCO:'gb-sct',USA:'us',PAR:'py',AUS:'au',TUR:'tr',GER:'de',CUW:'cw',ECU:'ec',CIV:'ci',NED:'nl',JPN:'jp',SWE:'se',TUN:'tn',ESP:'es',CPV:'cv',KSA:'sa',URU:'uy',BEL:'be',EGY:'eg',IRN:'ir',NZL:'nz',FRA:'fr',SEN:'sn',IRQ:'iq',NOR:'no',ARG:'ar',ALG:'dz',AUT:'at',JOR:'jo',POR:'pt',COD:'cd',UZB:'uz',COL:'co',ENG:'gb-eng',CRO:'hr',GHA:'gh',PAN:'pa'};
   function flagImg(ab){var c=ISO[ab];return c?'<img class="flagimg" src="https://flagcdn.com/w40/'+c+'.png" alt="'+esc(ab)+'" loading="lazy">':'';}
-  function buildMatches(){return FIX.map(function(f,i){var g=f[0],h=f[1],a=f[2],ko=f[3],res=f[4],br=(h==='BRA'||a==='BRA');return {id:'g'+i,group:'Grupo '+g,kickoff:ko,weight:br?2:1,a:{name:TEAMS[h].n,abbr:h,flag:TEAMS[h].f},b:{name:TEAMS[a].n,abbr:a,flag:TEAMS[a].f},result:res?{h:res[0],a:res[1]}:null};});}
+  function buildMatches(){return FIX.map(function(f,i){var g=f[0],h=f[1],a=f[2],ko=f[3],res=f[4],br=(h==='BRA'||a==='BRA'),isGrp=/^[A-Z]$/.test(g);return {id:'g'+i,group:isGrp?('Grupo '+g):g,kickoff:ko,weight:br?2:1,a:{name:TEAMS[h].n,abbr:h,flag:TEAMS[h].f},b:{name:TEAMS[a].n,abbr:a,flag:TEAMS[a].f},result:res?{h:res[0],a:res[1]}:null};});}
+  function syncFixMatches(){
+    if(!cfg||!Array.isArray(cfg.matches))return false;
+    var fixMatches=buildMatches(),changed=false;
+    fixMatches.forEach(function(fm){
+      var found=cfg.matches.filter(function(m){return m.id===fm.id;})[0];
+      if(!found){
+        var dayK=spDate(fm.kickoff);
+        var dup=cfg.matches.filter(function(m){
+          if(spDate(m.kickoff)!==dayK)return false;
+          return (m.a.abbr===fm.a.abbr&&m.b.abbr===fm.b.abbr)||(m.a.abbr===fm.b.abbr&&m.b.abbr===fm.a.abbr);
+        })[0];
+        if(dup){
+          if(fm.result&&(!dup.result||dup.result.h!==fm.result.h||dup.result.a!==fm.result.a)){
+            var sameOrder=(dup.a.abbr===fm.a.abbr);
+            dup.result=sameOrder?{h:fm.result.h,a:fm.result.a}:{h:fm.result.a,a:fm.result.h};
+            changed=true;
+          }
+        } else {
+          cfg.matches.push(fm);changed=true;
+        }
+      } else if(fm.result&&(!found.result||found.result.h!==fm.result.h||found.result.a!==fm.result.a)){
+        found.result=fm.result;changed=true;
+      }
+    });
+    if(changed)cfg.matches.sort(function(x,y){return new Date(x.kickoff)-new Date(y.kickoff);});
+    return changed;
+  }
 
   var cfg=null,me=null,players=[],isAdmin=false,filter='abertos',adminFilter='upcoming',myLastPos=null,duels=[],galoArenaFilter='all',rankView='geral',galoRankView='rei';
   var $=function(s,r){return (r||document).querySelector(s);},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
@@ -640,15 +669,17 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
       cfg=root.config;
       if(!cfg||cfg.dataVersion!==DATA_VERSION){cfg={dataVersion:DATA_VERSION,matches:buildMatches()};await fb.db.ref('bolao/config').set(cfg);}
       if(!cfg.matches)cfg.matches=buildMatches();
+      if(syncFixMatches())try{await fb.db.ref('bolao/config').set(cfg);}catch(e){}
       players=root.players?Object.keys(root.players).map(function(k){return root.players[k];}):[];
       duels=root.duels?Object.keys(root.duels).map(function(k){return root.duels[k];}):[];
-      fb.db.ref('bolao/config').on('value',function(s){var v=s.val();if(v){cfg=v;if(!cfg.matches)cfg.matches=buildMatches();resolveDuels();liveRerender();}});
+      fb.db.ref('bolao/config').on('value',function(s){var v=s.val();if(v){cfg=v;if(!cfg.matches)cfg.matches=buildMatches();syncFixMatches();resolveDuels();liveRerender();}});
       fb.db.ref('bolao/players').on('value',function(s){var v=s.val()||{};players=Object.keys(v).map(function(k){return v[k];});if(me){var mm=players.filter(function(p){return p.id===me.id;})[0];if(mm)me=mm;}liveRerender();});
       fb.db.ref('bolao/duels').on('value',function(s){var v=s.val()||{};duels=Object.keys(v).map(function(k){return v[k];});resolveDuels();liveRerender();});
     } else {
       cfg=await getObj(CFG_KEY,true);
       if(!cfg||cfg.dataVersion!==DATA_VERSION){cfg={dataVersion:DATA_VERSION,matches:buildMatches()};await setObj(CFG_KEY,cfg,true);}
       if(!cfg.matches)cfg.matches=buildMatches();
+      if(syncFixMatches())await setObj(CFG_KEY,cfg,true);
       players=[];var lst=await sList(PLAYER_PREFIX,true),keys=(lst&&lst.keys)||[];
       for(var i=0;i<keys.length;i++){var pl=await getObj(keys[i],true);if(pl&&pl.id)players.push(pl);}
       var _do=await getObj('bolao_duels',true)||{};duels=Object.keys(_do).map(function(k){return _do[k];});
