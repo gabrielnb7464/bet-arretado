@@ -514,7 +514,8 @@ var FIX=[
 ["I","NOR","FRA","2026-06-26T15:00:00-04:00",null],["I","SEN","IRQ","2026-06-26T15:00:00-04:00",null],["H","CPV","KSA","2026-06-26T20:00:00-04:00",null],["H","URU","ESP","2026-06-26T20:00:00-04:00",null],["G","EGY","IRN","2026-06-26T23:00:00-04:00",null],["G","NZL","BEL","2026-06-26T23:00:00-04:00",null],
 ["L","PAN","ENG","2026-06-27T17:00:00-04:00",null],["L","CRO","GHA","2026-06-27T17:00:00-04:00",null],["K","COL","POR","2026-06-27T19:30:00-04:00",null],["K","COD","UZB","2026-06-27T19:30:00-04:00",null],["J","ALG","AUT","2026-06-27T22:00:00-04:00",null],["J","JOR","ARG","2026-06-27T22:00:00-04:00",null],
 ["Semifinal","ESP","FRA","2026-07-14T16:00:00-04:00",[2,0]],["Semifinal","ARG","ENG","2026-07-15T16:00:00-04:00",[2,1]],
-["Grande Final","ESP","ARG","2026-07-19T15:00:00-04:00",null]
+["Grande Final","ESP","ARG","2026-07-19T15:00:00-04:00",null],
+["Disputa 3º Lugar","FRA","ENG","2026-07-18T17:00:00-04:00",null]
 ];
 
 /* ============ CONFIGURE AQUI ============ */
@@ -626,6 +627,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
           return (m.a.abbr===fm.a.abbr&&m.b.abbr===fm.b.abbr)||(m.a.abbr===fm.b.abbr&&m.b.abbr===fm.a.abbr);
         })[0];
         if(dup){
+          if(dup.kickoff!==fm.kickoff){dup.kickoff=fm.kickoff;changed=true;}
           if(fm.result&&(!dup.result||dup.result.h!==fm.result.h||dup.result.a!==fm.result.a)){
             var sameOrder=(dup.a.abbr===fm.a.abbr);
             dup.result=sameOrder?{h:fm.result.h,a:fm.result.a}:{h:fm.result.a,a:fm.result.h};
@@ -784,7 +786,7 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
     '2026-07-15':{icon:'⚔️',title:'Tarefa do Cangaceiro',desc:'<b>Segunda semi, cabra da peste!</b> Placar cravado vale <b>+40</b>, vencedor + saldo <b>+25</b>, vencedor certo <b>+15</b> e meio placar <b>+8</b>. Bora arrematar essa vaga na final!',tag:'até +40',calc:function(p,gs){var v=0;gs.forEach(function(m){var s=mScore(p,m);if(!s)return;var x=s.exact?40:(s.pts===18?25:(s.outcome?15:(s.pts===5?8:0)));if(x>v)v=x;});return v;}},
     '2026-07-16':{icon:'😴',title:'Descanso do Cangaceiro',desc:'Dia <b>sem jogo</b>, ô peste! Aproveita pra revisar teu palpite da <b>Grande Final</b> — quem já palpitou, dá uma última conferida. Domingo a caatinga chove dinheiro!',tag:'sem pontos',calc:function(p,gs){return 0;}},
     '2026-07-17':{icon:'🌵',title:'Descanso do Cangaceiro',desc:'A caatinga respira: dia sem bola. Vai afiando a intuição pro <b>Espanha × Argentina</b> de domingo — e olha o duelo 💀 <b>Marcado pra Morrer</b> na Rinha, vale ±40!',tag:'sem pontos',calc:function(p,gs){return 0;}},
-    '2026-07-18':{icon:'🔥',title:'Véspera da Grande Final',desc:'Amanhã é <b>Espanha × Argentina</b> valendo o mundo, cabra! <b>Última chance</b> de mexer no palpite e de marcar duelos 💀 na rinha. Bora com o dedo firme!',tag:'véspera',calc:function(p,gs){return 0;}},
+    '2026-07-18':{icon:'🥉',title:'Disputa do 3º Lugar',desc:'<b>França × Inglaterra</b> fecha o mata-mata! Cravou o placar? <b>+35</b>. Vencedor + saldo? <b>+22</b>. Vencedor certo? <b>+12</b>. Meio placar ainda paga <b>+7</b>. E amanhã é a Grande Final, meu rei!',tag:'até +35',calc:function(p,gs){var v=0;gs.forEach(function(m){var s=mScore(p,m);if(!s)return;var x=s.exact?35:(s.pts===18?22:(s.outcome?12:(s.pts===5?7:0)));if(x>v)v=x;});return v;}},
     '2026-07-19':{icon:'🏆',title:'Tarefa do Cangaceiro',desc:'<b>GRANDE FINAL, meu rei!</b> No olho da goiaba: crave o placar e leve <b>+120</b>. Vencedor + saldo dá <b>+70</b>, vencedor certo <b>+40</b>, meio placar <b>+15</b> — e quem palpitou e zerou ainda embolsa <b>+10</b> pela coragem. Hoje a caatinga chove dinheiro!',tag:'até +120',calc:function(p,gs){var v=0;gs.forEach(function(m){var s=mScore(p,m);if(!s)return;var x=s.exact?120:(s.pts===18?70:(s.outcome?40:(s.pts===5?15:10)));if(x>v)v=x;});return v;}}
   };
   function spDate(iso){try{return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(iso));}catch(e){return '';}}
