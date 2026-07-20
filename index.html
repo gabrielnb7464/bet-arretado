@@ -340,6 +340,50 @@
   .badges{display:inline-flex;gap:2px;vertical-align:middle;margin-left:4px}
   .badges .bdg{font-size:12.5px;cursor:default;filter:drop-shadow(0 1px 1px rgba(0,0,0,.55))}
   .rank-tabs{margin:-2px 0 14px}
+
+  /* ===== CELEBRAÇÃO DO CAMPEÃO (copa encerrada) ===== */
+  .champ-ov{position:fixed;inset:0;z-index:1200;display:grid;place-items:center;overflow:hidden;padding:18px;
+    background:radial-gradient(900px 560px at 50% -10%,rgba(246,192,38,.16),transparent 60%),radial-gradient(760px 480px at 15% 110%,rgba(251,139,30,.12),transparent 60%),#0e0a1f;
+    opacity:0;animation:champIn .6s ease .1s forwards}
+  @keyframes champIn{to{opacity:1}}
+  .champ-ov.out{animation:champOut .45s ease forwards}
+  @keyframes champOut{to{opacity:0;visibility:hidden}}
+  .champ-card{position:relative;z-index:4;width:min(420px,92vw);text-align:center;background:linear-gradient(180deg,#241b40,#1b1433);
+    border:2px solid var(--gold);border-radius:20px;padding:26px 20px 22px;box-shadow:0 24px 60px -20px rgba(0,0,0,.85),0 0 0 6px rgba(246,192,38,.08);
+    transform:scale(.7);opacity:0;animation:champCard .7s cubic-bezier(.2,1.4,.4,1) .35s forwards}
+  @keyframes champCard{to{transform:scale(1);opacity:1}}
+  .champ-card::before{content:"";position:absolute;inset:7px;border:2px dashed rgba(246,192,38,.45);border-radius:14px;pointer-events:none}
+  .champ-hat{width:120px;height:auto;margin:-4px auto 2px;display:block;filter:drop-shadow(0 8px 18px rgba(0,0,0,.6));
+    transform:translateY(-14px) rotate(-6deg);opacity:0;animation:hatDrop .6s cubic-bezier(.3,1.5,.5,1) .8s forwards}
+  @keyframes hatDrop{to{transform:translateY(0) rotate(0);opacity:1}}
+  .champ-galo{font-size:52px;line-height:1;position:relative;display:inline-block;margin:2px 0 6px;animation:galoBounce 2.2s ease-in-out 1.6s infinite}
+  .champ-galo .crown{position:absolute;top:-20px;left:50%;transform:translateX(-50%) rotate(-12deg);font-size:26px;animation:crownShine 2.2s ease-in-out 1.6s infinite}
+  @keyframes galoBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @keyframes crownShine{0%,100%{transform:translateX(-50%) rotate(-12deg)}50%{transform:translateX(-50%) rotate(-4deg) scale(1.12)}}
+  .champ-kicker{font-family:'Bungee',cursive;font-size:11px;letter-spacing:4px;color:var(--orange,#fb8b1e);margin-top:4px}
+  .champ-tt{font-family:'Bungee',cursive;font-size:21px;letter-spacing:1px;color:#f7eede;margin-top:6px;text-shadow:0 3px 0 rgba(0,0,0,.35)}
+  .champ-name{font-family:'Bungee',cursive;font-size:32px;line-height:1.1;color:var(--gold);margin-top:8px;text-shadow:0 4px 0 rgba(0,0,0,.4),0 0 26px rgba(246,192,38,.5);
+    opacity:0;transform:translateY(12px);animation:nameUp .55s ease 1.1s forwards}
+  @keyframes nameUp{to{opacity:1;transform:translateY(0)}}
+  .champ-pts{display:inline-block;margin-top:10px;background:rgba(246,192,38,.14);border:1px solid rgba(246,192,38,.5);color:var(--gold);
+    border-radius:999px;padding:5px 16px;font-family:'Oswald';font-weight:700;font-size:15px;letter-spacing:1px}
+  .champ-verse{margin:14px auto 0;max-width:300px;font-size:12.5px;line-height:1.65;color:#d9c9a8;font-style:italic;
+    border-top:1px dashed rgba(246,192,38,.35);border-bottom:1px dashed rgba(246,192,38,.35);padding:10px 4px}
+  .champ-podium{display:flex;justify-content:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+  .champ-podium span{font-size:12px;color:var(--muted);background:#1c1536;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+  .champ-podium b{color:#f7eede}
+  .champ-ok{margin-top:16px;background:var(--gold);color:#0b1322;border:none;border-radius:999px;padding:13px 26px;font-weight:800;font-size:15px;cursor:pointer;
+    box-shadow:0 10px 26px -10px rgba(246,192,38,.7);animation:okPulse 1.8s ease-in-out 2.2s infinite}
+  @keyframes okPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+  .champ-conf{position:absolute;inset:0;pointer-events:none;z-index:3}
+  .ccf{position:absolute;top:-16px;width:9px;height:14px;border-radius:2px;opacity:.95;animation:ccfFall linear infinite}
+  @keyframes ccfFall{0%{transform:translateY(-5vh) rotate(0)}100%{transform:translateY(108vh) rotate(720deg)}}
+  .champ-fw{position:absolute;pointer-events:none;z-index:2}
+  .champ-fw i{position:absolute;left:0;top:0;width:4px;height:14px;border-radius:2px;transform-origin:center 0;opacity:0;animation:fwBurst 2.6s ease-out infinite}
+  @keyframes fwBurst{0%,8%{opacity:0;transform:rotate(var(--r)) translateY(0) scaleY(.3)}14%{opacity:1}42%{opacity:0;transform:rotate(var(--r)) translateY(66px) scaleY(1)}100%{opacity:0;transform:rotate(var(--r)) translateY(66px)}}
+  .champ-bandeirinhas{position:absolute;top:0;left:0;right:0;height:30px;z-index:5;display:flex;justify-content:center;gap:6px;padding-top:0}
+  .champ-bandeirinhas i{width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:16px solid var(--c);opacity:.9}
+  @media (prefers-reduced-motion: reduce){.champ-ov,.champ-card,.champ-hat,.champ-name{animation-duration:.01s!important;animation-delay:0s!important}.champ-galo,.champ-galo .crown,.champ-ok,.ccf,.champ-fw i{animation:none!important;opacity:1}}
 </style>
 </head>
 <body>
@@ -514,7 +558,7 @@ var FIX=[
 ["I","NOR","FRA","2026-06-26T15:00:00-04:00",null],["I","SEN","IRQ","2026-06-26T15:00:00-04:00",null],["H","CPV","KSA","2026-06-26T20:00:00-04:00",null],["H","URU","ESP","2026-06-26T20:00:00-04:00",null],["G","EGY","IRN","2026-06-26T23:00:00-04:00",null],["G","NZL","BEL","2026-06-26T23:00:00-04:00",null],
 ["L","PAN","ENG","2026-06-27T17:00:00-04:00",null],["L","CRO","GHA","2026-06-27T17:00:00-04:00",null],["K","COL","POR","2026-06-27T19:30:00-04:00",null],["K","COD","UZB","2026-06-27T19:30:00-04:00",null],["J","ALG","AUT","2026-06-27T22:00:00-04:00",null],["J","JOR","ARG","2026-06-27T22:00:00-04:00",null],
 ["Semifinal","ESP","FRA","2026-07-14T16:00:00-04:00",[2,0]],["Semifinal","ARG","ENG","2026-07-15T16:00:00-04:00",[2,1]],
-["Grande Final","ESP","ARG","2026-07-19T15:00:00-04:00",null],
+["Grande Final","ESP","ARG","2026-07-19T15:00:00-04:00",[0,0]],
 ["Disputa 3º Lugar","FRA","ENG","2026-07-18T17:00:00-04:00",[4,6]]
 ];
 
@@ -744,7 +788,49 @@ var INTRO_AUDIO_URL = "data:audio/mpeg;base64,SUQzBAAAAAABAFRYWFgAAAASAAADbWFqb3
   $('#loginBtn').addEventListener('click',async function(){var id=$('#loginSel').value;if(!id){toast('Selecione seu nome');return;}var p=players.filter(function(x){return x.id===id;})[0];if(!p)return;var cpf=onlyDigits($('#loginCpf').value);if(cpf.length!==11){toast('Digite os 11 números do CPF');return;}var h=await hashCPF(cpf);if(p.cpfHash){if(p.cpfHash!==h){toast('CPF incorreto pra esse nome');return;}}else{p.cpfHash=h;await savePlayer(p);}me=p;await setObj(ME_KEY,{id:p.id},false);$('#register').style.display='none';toast('Bem-vindo de volta, '+p.name.split(' ')[0]+'!',true);afterLogin();});
   $('#regBtn').addEventListener('click',async function(){var name=$('#regName').value.trim(),pix=$('#regPix').value.trim(),cpf=onlyDigits($('#regCpf').value);if(!name){toast('Digite seu nome');return;}if(cpf.length!==11){toast('Digite os 11 números do seu CPF');return;}if(!pix){toast('Informe sua chave Pix');return;}if(players.some(function(q){return (q.name||'').trim().toLowerCase()===name.toLowerCase();})){toast('Já existe um participante com esse nome');return;}var h=await hashCPF(cpf);me={id:uid(),name:name,pix:pix,cpfHash:h,paid:false,predictions:{}};players.push(me);await savePlayer(me);await setObj(ME_KEY,{id:me.id},false);$('#register').style.display='none';toast('Bem-vindo, '+name.split(' ')[0]+'!',true);afterLogin();});
   $('#logout').addEventListener('click',async function(){await sSet(ME_KEY,'',false);me=null;showRegister();});
-  function afterLogin(){var chip=$('#meChip');chip.style.display='flex';$('#meName').textContent=me.name.split(' ')[0];$('#nav').style.visibility='visible';switchView('palpites');announceDeathMatchOnce();}
+  function afterLogin(){var chip=$('#meChip');chip.style.display='flex';$('#meName').textContent=me.name.split(' ')[0];$('#nav').style.visibility='visible';switchView('palpites');announceDeathMatchOnce();showChampionCelebration();}
+  var champShown=false;
+  function showChampionCelebration(){
+    try{
+      if(champShown||!cupFinished())return;
+      if(document.getElementById('intro')&&!introGone){setTimeout(showChampionCelebration,400);return;}
+      var rk=ranked();if(!rk.length)return;
+      champShown=true;
+      var champ=rk[0],vice=rk[1],terc=rk[2];
+      var first=esc((champ.p.name||'').split(' ')[0].toUpperCase());
+      var cores=['#f6c026','#fb8b1e','#34d399','#e2503a','#facc15','#f7eede'];
+      var ov=document.createElement('div');ov.className='champ-ov';ov.id='champOverlay';
+      var hat='<svg class="champ-hat" viewBox="0 0 200 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+        '<path d="M18 78 Q100 118 182 78 L176 64 Q100 96 24 64 Z" fill="#7a4a1e" stroke="#f6c026" stroke-width="3"/>'+
+        '<path d="M42 68 Q100 20 158 68 Q130 82 100 82 Q70 82 42 68 Z" fill="#8a5524" stroke="#f6c026" stroke-width="3"/>'+
+        '<path d="M60 62 Q100 34 140 62" fill="none" stroke="#f6c026" stroke-width="2.5" stroke-dasharray="1 6" stroke-linecap="round"/>'+
+        '<g fill="#f6c026"><path d="M100 38 l3.6 7.4 8.2 1.2 -5.9 5.7 1.4 8.1 -7.3 -3.8 -7.3 3.8 1.4 -8.1 -5.9 -5.7 8.2 -1.2 Z"/>'+
+        '<circle cx="66" cy="60" r="3.4"/><circle cx="134" cy="60" r="3.4"/><circle cx="82" cy="50" r="2.6"/><circle cx="118" cy="50" r="2.6"/></g></svg>';
+      var band='<div class="champ-bandeirinhas">'+cores.map(function(c){return '<i style="--c:'+c+'"></i>';}).join('')+cores.slice().reverse().map(function(c){return '<i style="--c:'+c+'"></i>';}).join('')+'</div>';
+      var podio='';
+      if(vice||terc){podio='<div class="champ-podium">'+(vice?'<span>🥈 <b>'+esc(vice.p.name.split(' ')[0])+'</b> · '+vice.st.pts+' pts</span>':'')+(terc?'<span>🥉 <b>'+esc(terc.p.name.split(' ')[0])+'</b> · '+terc.st.pts+' pts</span>':'')+'</div>';}
+      ov.innerHTML=band+
+        '<div class="champ-conf"></div>'+
+        '<div class="champ-card">'+hat+
+        '<div class="champ-galo">🐓<span class="crown">👑</span></div>'+
+        '<div class="champ-kicker">COPA 2026 · ENCERRADA</div>'+
+        '<div class="champ-tt">O GRANDE VENCEDOR</div>'+
+        '<div class="champ-name">'+first+'</div>'+
+        '<div class="champ-pts">🏆 '+champ.st.pts+' pontos</div>'+
+        '<div class="champ-verse">No sertão da bola em fogo,<br>cravou placar sem tremer —<br>venceu a rinha, levou o jogo:<br>é o rei do bolão, muié!</div>'+
+        podio+
+        '<button class="champ-ok" type="button">Amém, meu rei! 🏆</button>'+
+        '</div>';
+      document.body.appendChild(ov);
+      var conf=ov.querySelector('.champ-conf');
+      for(var i=0;i<46;i++){var f=document.createElement('i');f.className='ccf';f.style.left=(Math.random()*100)+'%';f.style.background=cores[i%cores.length];f.style.animationDuration=(2.6+Math.random()*2.4)+'s';f.style.animationDelay=(Math.random()*3)+'s';f.style.width=(6+Math.random()*6)+'px';conf.appendChild(f);}
+      var spots=[[14,22],[84,16],[24,74],[78,80],[50,10]];
+      spots.forEach(function(sp,si){var fw=document.createElement('div');fw.className='champ-fw';fw.style.left=sp[0]+'%';fw.style.top=sp[1]+'%';var cor=cores[si%cores.length];for(var j=0;j<10;j++){var s=document.createElement('i');s.style.setProperty('--r',(j*36)+'deg');s.style.background=cor;s.style.animationDelay=(si*.5)+'s';fw.appendChild(s);}ov.appendChild(fw);});
+      function close(){ov.classList.add('out');setTimeout(function(){ov.parentNode&&ov.parentNode.removeChild(ov);},480);}
+      ov.querySelector('.champ-ok').addEventListener('click',close);
+      try{if(navigator.vibrate)navigator.vibrate([60,50,60,50,140]);}catch(e){}
+    }catch(e){}
+  }
   function announceDeathMatchOnce(){try{var K='bolao_marcadopramorrer_seen_v1';if(localStorage.getItem(K)==='1')return;var finalM=cfg&&cfg.matches&&cfg.matches.filter(function(x){return isDeathMatch(x);})[0];if(!finalM||finalM.result)return;setTimeout(function(){showDeathAnnounce(finalM);try{localStorage.setItem(K,'1');}catch(e){}},700);}catch(e){}}
   function showDeathAnnounce(m){var ov=document.getElementById('deathOverlay');if(!ov){ov=document.createElement('div');ov.id='deathOverlay';ov.className='pop-overlay death';document.body.appendChild(ov);ov.addEventListener('click',function(e){if(e.target===ov)ov.classList.remove('show');});}var mm=m?(esc(m.a.abbr)+' × '+esc(m.b.abbr)+' · '+esc(brt(m.kickoff))):'';ov.innerHTML='<div class="pop-box death"><div class="pop-ico">💀</div><div class="pop-tt">MARCADO PRA MORRER</div><div class="pop-msg-h">Modo <b>Grande Final</b> chegou na Rinha de Galo</div><div class="pop-msg-b">Na final, o duelo vale <b>±40 pontos</b>. Vencedor arranca <b>40</b> do perdedor — sem dó.</div>'+(mm?'<div class="pop-msg-fx">'+mm+'</div>':'')+'<button class="pop-ok death" type="button">Tô dentro, cabra 💀</button></div>';ov.querySelector('.pop-ok').addEventListener('click',function(){ov.classList.remove('show');});ov.classList.add('show');try{if(navigator.vibrate)navigator.vibrate([70,60,120]);}catch(e){}}
 
